@@ -80,10 +80,11 @@ python -m http.server 4321 --directory ui
 Open <http://localhost:4321>, compose a pack, and hit **Build skill pack**.
 The UI is a single self-contained HTML file — no build step, no dependencies.
 
-Validate a manifest:
+Validate a manifest, and check the packs against each other:
 
 ```bash
 python tools/validate.py examples/academic-presentation.vsc.yaml
+python tools/check_consistency.py
 ```
 
 ---
@@ -152,7 +153,7 @@ visual-skill-composer/
 ├── brand-packs/           Whose identity applies
 ├── qa-packs/              How strictly it is checked
 ├── schemas/               JSON Schema for the manifest
-├── tools/validate.py      Manifest validator
+├── tools/                 validate.py, check_consistency.py, gen_skill_docs.py
 ├── ui/index.html          The composer (single file, no build)
 └── examples/              Sample manifests
 ```

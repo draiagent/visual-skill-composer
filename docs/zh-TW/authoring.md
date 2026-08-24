@@ -38,4 +38,13 @@ default_qa: standard
 - ID：一律英文 kebab-case，沒有例外。
 - 標籤與摘要：`en` 與 `zh-TW` 都要有。缺 `zh-TW` 會退回英文，那是 bug，不是設計。
 - 絕不提交任何 token、金鑰或憑證。品牌包只放參照。
-- 動過 registry 之後，開 PR 前先跑 `python tools/validate.py`。
+- 動過 registry 之後，開 PR 前兩個檢查都要跑：
+
+```bash
+python tools/validate.py
+python tools/check_consistency.py
+```
+
+`check_consistency.py` 會抓到：沒有任何專案包引用到的技能、沒補齊的相依、
+沒寫 `avoid` 清單的風格包、失效的文件連結，以及最常出事的那一種——
+包裡有這個 id，但忘了加進 UI 內嵌的那份資料。

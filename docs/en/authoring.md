@@ -39,4 +39,13 @@ an `avoid` list. The avoid list is what makes the style enforceable by `vision-j
 - Labels and summaries: both `en` and `zh-TW`. A missing `zh-TW` falls back to English,
   which is a bug, not a feature.
 - Never commit a token, key, or credential. Brand packs carry references only.
-- After any registry change, run `python tools/validate.py` before opening the PR.
+- After any registry change, run both checks before opening the PR:
+
+```bash
+python tools/validate.py
+python tools/check_consistency.py
+```
+
+`check_consistency.py` catches unreachable skills, unmet prerequisites, style packs with
+no `avoid` list, broken doc links, and — the one that bites — ids that exist in a pack but
+were never added to the UI's embedded copy of the same data.

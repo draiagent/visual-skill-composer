@@ -85,10 +85,11 @@ python -m http.server 4321 --directory ui
 打開 <http://localhost:4321>，組好之後按「▶ 建立技能包」。
 介面是單一自足的 HTML 檔，不需要打包、沒有相依套件。
 
-驗證 manifest：
+驗證 manifest，以及檢查各個包之間的一致性：
 
 ```bash
 python tools/validate.py examples/academic-presentation.vsc.yaml
+python tools/check_consistency.py
 ```
 
 ---
@@ -158,7 +159,7 @@ visual-skill-composer/
 ├── brand-packs/           套誰的品牌
 ├── qa-packs/              檢查多嚴格
 ├── schemas/               Manifest 的 JSON Schema
-├── tools/validate.py      Manifest 驗證器
+├── tools/                 validate.py、check_consistency.py、gen_skill_docs.py
 ├── ui/index.html          組裝介面（單一檔案、免打包）
 └── examples/              範例 manifest
 ```

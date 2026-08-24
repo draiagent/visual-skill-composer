@@ -352,6 +352,14 @@ function esc(s){
 }
 function arg(s){ return "'" + s + "'"; }
 
+// brand-check cannot run when no brand system was chosen, so a QA pack never
+// enables it against brand.source = none.
+function activeChecks(q){
+  return q.checks.filter(function(c){
+    return !(c === 'brand-check' && (!S.brand || S.brand === 'none'));
+  });
+}
+
 function render(){
   var els = document.querySelectorAll('[data-i]');
   for(var i = 0; i < els.length; i++){ els[i].textContent = t(els[i].getAttribute('data-i')); }
@@ -420,6 +428,7 @@ function render(){
   var q = byId(QAS, S.qa) || QAS[1];
   var st = byId(STYLES, S.style);
   var br = byId(BRANDS, S.brand);
+  var checks = activeChecks(q);
   var title = document.getElementById('ptitle').value.replace(/^\s+|\s+$/g, '');
 
   function chips(ids, cls){
@@ -434,7 +443,7 @@ function render(){
     ['kskills', chips(S.skills, '') || '—'],
     ['kvisual', st ? '<span class="chip">' + esc(L(st)) + '</span>' : '—'],
     ['kbrand',  br ? '<span class="chip">' + esc(L(br)) + '</span>' : '—'],
-    ['kqa', chips(q.checks, 'q') + '<span class="chip q">' + q.th + ' / 100</span>']
+    ['kqa', chips(checks, 'q') + '<span class="chip q">' + q.th + ' / 100</span>']
   ];
   document.getElementById('summary').innerHTML = rows.map(function(r){
     return '<div class="row"><div class="k">' + esc(t(r[0])) + '</div><div>' + r[1] + '</div></div>';
@@ -443,6 +452,7 @@ function render(){
 
 function manifest(){
   var q = byId(QAS, S.qa) || QAS[1];
+  var checks = activeChecks(q);
   var title = document.getElementById('ptitle').value.replace(/^\s+|\s+$/g, '');
   var m = {
     vsc_version: '0.1.0',
@@ -452,10 +462,10 @@ function manifest(){
     brand: { source: S.brand },
     quality: {
       pack: q.id,
-      vision_judge: has(q.checks, 'vision-judge'),
-      text_check:   has(q.checks, 'text-check'),
-      brand_check:  has(q.checks, 'brand-check'),
-      auto_repair:  has(q.checks, 'auto-repair'),
+      vision_judge: has(checks, 'vision-judge'),
+      text_check:   has(checks, 'text-check'),
+      brand_check:  has(checks, 'brand-check'),
+      auto_repair:  has(checks, 'auto-repair'),
       threshold: q.th,
       max_repair_rounds: q.rounds
     },
