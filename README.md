@@ -92,6 +92,15 @@ python tools/validate.py examples/academic-presentation.vsc.yaml
 python tools/check_consistency.py
 ```
 
+### Install as a Claude Code skill
+
+```bash
+mkdir -p ~/.claude/skills/visual-skill-composer
+cp install/claude-code/SKILL.md ~/.claude/skills/visual-skill-composer/SKILL.md
+```
+
+Then ask for a skill pack from any directory. See [install/README.md](./install/README.md).
+
 ---
 
 ## What a manifest looks like
@@ -158,6 +167,7 @@ visual-skill-composer/
 ├── brand-packs/           Whose identity applies
 ├── qa-packs/              How strictly it is checked
 ├── schemas/               JSON Schema for the manifest
+├── install/               Global Claude Code skill
 ├── tools/                 validate.py, check_consistency.py, gen_skill_docs.py
 ├── index.html             GitHub Pages entry, redirects to ui/
 ├── ui/index.html          The composer (single file, no build)

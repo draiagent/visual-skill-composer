@@ -97,6 +97,16 @@ python tools/validate.py examples/academic-presentation.vsc.yaml
 python tools/check_consistency.py
 ```
 
+### 安裝成 Claude Code 全域技能
+
+```bash
+mkdir -p ~/.claude/skills/visual-skill-composer
+cp install/claude-code/SKILL.md ~/.claude/skills/visual-skill-composer/SKILL.md
+```
+
+裝完重開 Claude Code，之後在任何目錄說「幫我組一個技能包」就會觸發。
+細節見 [install/README.md](./install/README.md)。
+
 ---
 
 ## 產出的 Manifest 長這樣
@@ -164,6 +174,7 @@ visual-skill-composer/
 ├── brand-packs/           套誰的品牌
 ├── qa-packs/              檢查多嚴格
 ├── schemas/               Manifest 的 JSON Schema
+├── install/               全域 Claude Code 技能
 ├── tools/                 validate.py、check_consistency.py、gen_skill_docs.py
 ├── index.html             GitHub Pages 入口，導向 ui/
 ├── ui/index.html          組裝介面（單一檔案、免打包）
