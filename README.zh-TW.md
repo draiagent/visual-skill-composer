@@ -34,6 +34,18 @@ VSC 把打勾清單換成五個「用看的就能做」的決策：
 
 ---
 
+## 用一張漫畫看懂這條流程
+
+**[技能包的五層漏斗](https://draiagent.github.io/visual-skill-composer/comic/)**
+——八格漫畫筆記，一層一格走完五層。遮住文字，八格仍讀得出因果。
+
+這張漫畫本身就是走完一次 VAD `VAC-COMIC-001` 標準卡的產物，
+所以它同時是這個 repo 在講的那條交接流程的實作範例：先分鏡、依 rubric 評分、再動筆。
+分鏡原始檔在 [`examples/vsc-flow-8panel.storyboard.json`](./examples/vsc-flow-8panel.storyboard.json)，
+通過 VAD-Comic-Notes 的 storyboard schema 驗證。
+
+---
+
 ## VSC 與 VAD 的關係
 
 這兩個**刻意不合併**。
@@ -180,6 +192,7 @@ visual-skill-composer/
 ├── install/               全域 Claude Code 技能
 ├── tools/                 validate.py、check_consistency.py、gen_skill_docs.py
 ├── index.html             GitHub Pages 入口，導向 ui/
+├── comic/                 解釋流程的八格漫畫筆記
 ├── ui/index.html          組裝介面（單一檔案、免打包）
 └── examples/              範例 manifest
 ```

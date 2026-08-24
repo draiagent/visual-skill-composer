@@ -1,0 +1,664 @@
+<!doctype html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="八格漫畫筆記：Visual Skill Composer 的五層技能包產出流程。">
+<title>技能包的五層漏斗</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<style>
+  :root{
+    --ground:#E6EAEC;
+    --panel:#FAFBFB;
+    --ink:#14212B;
+    --muted:#566672;
+    --line:#C3CDD3;
+    --signal:#9C5800;
+    --signal-soft:#F5E2C2;
+    --machine:#186576;
+    --machine-soft:#CFE2E7;
+    --stop:#A32B24;
+
+    --display:"Bricolage Grotesque","Noto Sans TC","Microsoft JhengHei",sans-serif;
+    --body:"Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,monospace;
+
+    --measure:64ch;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#0F161B;
+      --panel:#18232B;
+      --ink:#E4EBEF;
+      --muted:#93A5B1;
+      --line:#2B3B46;
+      --signal:#F2A93B;
+      --signal-soft:#4A3617;
+      --machine:#54B6CC;
+      --machine-soft:#1B3E48;
+      --stop:#E8695F;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0F161B;
+    --panel:#18232B;
+    --ink:#E4EBEF;
+    --muted:#93A5B1;
+    --line:#2B3B46;
+    --signal:#F2A93B;
+    --signal-soft:#4A3617;
+    --machine:#54B6CC;
+    --machine-soft:#1B3E48;
+    --stop:#E8695F;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:var(--ground);
+    color:var(--ink);
+    font-family:var(--body);
+    font-size:17px;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1120px;margin:0 auto;padding:clamp(28px,5vw,64px) clamp(18px,4vw,40px) 80px}
+
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin:0 0 14px;
+  }
+  h1{
+    font-family:var(--display);
+    font-weight:800;
+    font-size:clamp(30px,5.4vw,52px);
+    line-height:1.12;
+    letter-spacing:-.015em;
+    text-wrap:balance;
+    margin:0 0 18px;
+  }
+  .thesis{
+    font-size:clamp(18px,2.3vw,22px);
+    line-height:1.55;
+    max-width:var(--measure);
+    margin:0;
+    border-left:3px solid var(--signal);
+    padding-left:18px;
+  }
+  .goal{
+    max-width:var(--measure);
+    color:var(--muted);
+    font-size:15.5px;
+    margin:18px 0 0;
+  }
+
+  .legend{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px 22px;
+    margin:30px 0 0;
+    padding:14px 18px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:3px;
+  }
+  .legend span{display:inline-flex;align-items:center;gap:9px;font-size:14.5px;color:var(--muted)}
+  .swatch{width:13px;height:13px;border-radius:2px;flex:none}
+  .swatch.s{background:var(--signal)}
+  .swatch.m{background:var(--machine)}
+
+  hr.rule{border:none;border-top:1px solid var(--line);margin:44px 0 36px}
+
+  .strip{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:clamp(16px,2.4vw,26px);
+  }
+  figure.panel{
+    margin:0;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:3px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+  }
+  .panel svg{display:block;width:100%;height:auto;background:var(--panel)}
+  figcaption{
+    display:flex;
+    align-items:baseline;
+    gap:12px;
+    padding:13px 16px 15px;
+    border-top:1px solid var(--line);
+  }
+  .num{
+    font-family:var(--display);
+    font-weight:800;
+    font-size:15px;
+    color:var(--signal);
+    font-variant-numeric:tabular-nums;
+    flex:none;
+    line-height:1.5;
+  }
+  .say{font-size:16px;font-weight:500;line-height:1.5}
+  .purpose{
+    display:block;
+    font-size:13px;
+    color:var(--muted);
+    font-weight:400;
+    margin-top:3px;
+  }
+
+  h2{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:clamp(20px,2.6vw,26px);
+    letter-spacing:-.01em;
+    margin:0 0 8px;
+    text-wrap:balance;
+  }
+  .lede{color:var(--muted);font-size:15.5px;max-width:var(--measure);margin:0 0 24px}
+
+  .points{list-style:none;padding:0;margin:0;display:grid;gap:2px;max-width:var(--measure)}
+  .points li{
+    display:grid;
+    grid-template-columns:auto 1fr;
+    gap:14px;
+    padding:11px 0;
+    border-bottom:1px solid var(--line);
+    align-items:baseline;
+  }
+  .points li:last-child{border-bottom:none}
+  .points b{
+    font-family:var(--mono);
+    font-size:12.5px;
+    font-weight:500;
+    color:var(--signal);
+    font-variant-numeric:tabular-nums;
+  }
+
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,52px);margin-top:44px}
+
+  .flow{
+    font-family:var(--mono);
+    font-size:13.5px;
+    line-height:2;
+    color:var(--muted);
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:3px;
+    padding:18px 20px;
+    margin:0;
+    overflow-x:auto;
+  }
+  .flow b{color:var(--ink);font-weight:500}
+
+  .scroller{overflow-x:auto}
+  table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:380px}
+  caption{
+    text-align:left;
+    font-size:13px;
+    color:var(--muted);
+    padding-bottom:10px;
+    font-family:var(--mono);
+    letter-spacing:.05em;
+  }
+  th,td{text-align:left;padding:9px 12px 9px 0;border-bottom:1px solid var(--line)}
+  th{font-weight:500;color:var(--muted);font-size:13px}
+  td.n{text-align:right;padding-right:0;font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:13.5px}
+  td.was{color:var(--muted)}
+  td.up{color:var(--signal);font-weight:700}
+  tr.total td{border-bottom:none;padding-top:13px;font-weight:700}
+  tr.total td.up{color:var(--signal)}
+  .flag{color:var(--muted);font-size:13.5px;margin-top:14px;max-width:var(--measure)}
+  .flag b{color:var(--signal);font-family:var(--mono);font-size:12.5px;font-weight:500}
+
+  footer{
+    margin-top:56px;
+    padding-top:22px;
+    border-top:1px solid var(--line);
+    color:var(--muted);
+    font-size:14px;
+    max-width:var(--measure);
+  }
+  a{color:var(--machine)}
+  a:focus-visible{outline:2px solid var(--signal);outline-offset:3px}
+
+  @media (max-width:760px){
+    .strip{grid-template-columns:1fr}
+    .cols{grid-template-columns:1fr;gap:36px}
+    body{font-size:16px}
+  }
+
+  @media (prefers-reduced-motion:no-preference){
+    figure.panel{animation:rise .5s ease-out both}
+    figure.panel:nth-child(2){animation-delay:.05s}
+    figure.panel:nth-child(3){animation-delay:.1s}
+    figure.panel:nth-child(4){animation-delay:.15s}
+    figure.panel:nth-child(5){animation-delay:.2s}
+    figure.panel:nth-child(6){animation-delay:.25s}
+    figure.panel:nth-child(7){animation-delay:.3s}
+    figure.panel:nth-child(8){animation-delay:.35s}
+    @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <p class="eyebrow">Visual Skill Composer — 八格漫畫筆記</p>
+  <h1>技能包的五層漏斗</h1>
+  <p class="thesis">為什麼要先「選、組、看」，而不是直接叫 AI 開工？</p>
+  <p class="goal">看完能逐層說出五層各自決定什麼、如何限縮下一層，並解釋為什麼品牌只放參照、以及為什麼組裝與執行要分開。</p>
+
+  <div class="legend">
+    <span><i class="swatch s"></i>琥珀＝人做的選擇</span>
+    <span><i class="swatch m"></i>靛青＝機器負責的部分</span>
+    <span>把文字全部遮住，八格仍應讀得出因果。</span>
+  </div>
+</header>
+
+<hr class="rule">
+
+<div class="strip">
+
+  <!-- ============ 1 ============ -->
+  <figure class="panel">
+    <svg viewBox="0 0 400 300" role="img" aria-label="人把一個看不清內容的霧包裹推給機器人，機器人頭上冒出問號，手懸在工具牆前不知道該拿哪一個。">
+      <line x1="250" y1="42" x2="386" y2="42" stroke="var(--line)" stroke-width="2"/>
+      <g fill="none" stroke="var(--line)" stroke-width="2">
+        <rect x="258" y="46" width="16" height="30" rx="2"/>
+        <rect x="284" y="46" width="16" height="30" rx="2"/>
+        <rect x="310" y="46" width="16" height="30" rx="2"/>
+        <rect x="336" y="46" width="16" height="30" rx="2"/>
+        <rect x="362" y="46" width="16" height="30" rx="2"/>
+      </g>
+      <line x1="20" y1="228" x2="380" y2="228" stroke="var(--ink)" stroke-width="3"/>
+      <line x1="70" y1="228" x2="70" y2="278" stroke="var(--ink)" stroke-width="3"/>
+      <line x1="330" y1="228" x2="330" y2="278" stroke="var(--ink)" stroke-width="3"/>
+      <circle cx="66" cy="120" r="20" fill="none" stroke="var(--signal)" stroke-width="3"/>
+      <path d="M40 228 L46 168 Q66 154 86 168 L92 228" fill="none" stroke="var(--signal)" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M86 176 L128 200" fill="none" stroke="var(--signal)" stroke-width="3" stroke-linecap="round"/>
+      <rect x="140" y="176" width="76" height="50" rx="4" fill="var(--ground)" stroke="var(--muted)" stroke-width="2.5" stroke-dasharray="7 6"/>
+      <g stroke="var(--muted)" stroke-width="2" stroke-linecap="round" opacity=".85">
+        <path d="M152 194 q10 -7 20 0 t20 0"/>
+        <path d="M152 208 q10 -7 20 0 t20 0"/>
+      </g>
+      <path d="M222 200 L246 200" stroke="var(--muted)" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M240 194 L248 200 L240 206" fill="none" stroke="var(--muted)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="312" y1="112" x2="312" y2="100" stroke="var(--machine)" stroke-width="3"/>
+      <circle cx="312" cy="96" r="4" fill="var(--machine)"/>
+      <rect x="286" y="112" width="52" height="42" rx="8" fill="none" stroke="var(--machine)" stroke-width="3"/>
+      <circle cx="301" cy="133" r="4.5" fill="var(--machine)"/>
+      <circle cx="323" cy="133" r="4.5" fill="var(--machine)"/>
+      <path d="M292 228 L296 166 L328 166 L332 228" fill="none" stroke="var(--machine)" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M328 174 L352 122" fill="none" stroke="var(--machine)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 9"/>
+      <circle cx="352" cy="116" r="5" fill="none" stroke="var(--machine)" stroke-width="3"/>
+      <g fill="var(--signal)" font-family="var(--display)" font-weight="800" text-anchor="middle">
+        <text x="268" y="96" font-size="30">?</text>
+        <text x="300" y="78" font-size="40">?</text>
+        <text x="336" y="94" font-size="26">?</text>
+      </g>
+    </svg>
+    <figcaption>
+      <span class="num">01</span>
+      <span class="say">「幫我做一份課程簡報」
+        <span class="purpose">需求沒有規格，AI 只能猜；猜錯的成本由人承擔。</span>
+      </span>
+    </figcaption>
+  </figure>
+
+  <!-- ============ 2 ============ -->
+  <figure class="panel">
+    <svg viewBox="0 0 400 300" role="img" aria-label="五段式漏斗升起，最上層發亮，人把一張簡報卡片放進最寬的開口，其他沒被選的卡片留在旁邊。">
+      <g stroke="var(--line)" stroke-width="2.5" fill="none">
+        <path d="M82 88 L230 88 L219 126 L93 126 Z"/>
+        <path d="M93 130 L219 130 L208 166 L104 166 Z"/>
+        <path d="M104 170 L208 170 L198 204 L114 204 Z"/>
+        <path d="M114 208 L198 208 L189 242 L123 242 Z"/>
+      </g>
+      <path d="M70 44 L242 44 L230 84 L82 84 Z" fill="var(--signal-soft)" stroke="var(--signal)" stroke-width="3.5"/>
+      <g transform="rotate(-9 158 22)">
+        <rect x="130" y="2" width="56" height="40" rx="3" fill="var(--panel)" stroke="var(--signal)" stroke-width="3"/>
+        <rect x="138" y="10" width="40" height="15" rx="1.5" fill="var(--signal-soft)" stroke="var(--signal)" stroke-width="2"/>
+        <line x1="138" y1="32" x2="170" y2="32" stroke="var(--signal)" stroke-width="2.5" stroke-linecap="round"/>
+      </g>
+      <path d="M158 44 L158 40" stroke="var(--signal)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="2 5"/>
+      <path d="M30 128 L106 74" fill="none" stroke="var(--signal)" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="112" cy="69" r="7" fill="none" stroke="var(--signal)" stroke-width="3"/>
+      <g fill="none" stroke="var(--line)" stroke-width="2.5">
+        <rect x="278" y="96" width="52" height="38" rx="3"/>
+        <rect x="292" y="150" width="52" height="38" rx="3"/>
+        <rect x="278" y="204" width="52" height="38" rx="3"/>
+      </g>
+    </svg>
+    <figcaption>
+      <span class="num">02</span>
+      <span class="say">① 你要做什麼？
+        <span class="purpose">第一層決定專案類型，是整條流程的入口。</span>
+      </span>
+    </figcaption>
+  </figure>
+
+  <!-- ============ 3 ============ -->
+  <figure class="panel">
+    <svg viewBox="0 0 400 300" role="img" aria-label="漏斗第二層點亮，右側工具牆上五個工具射出短光線並滑進漏斗，另外兩個是虛線輪廓，人伸手把其中一個虛線工具也拿下來。">
+      <g stroke="var(--line)" stroke-width="2.5" fill="none">
+        <path d="M70 44 L242 44 L230 84 L82 84 Z"/>
+        <path d="M93 130 L219 130 L208 166 L104 166 Z"/>
+        <path d="M104 170 L208 170 L198 204 L114 204 Z"/>
+        <path d="M114 208 L198 208 L189 242 L123 242 Z"/>
+      </g>
+      <path d="M82 88 L230 88 L219 126 L93 126 Z" fill="var(--signal-soft)" stroke="var(--signal)" stroke-width="3.5"/>
+      <line x1="258" y1="40" x2="390" y2="40" stroke="var(--line)" stroke-width="2"/>
+      <g fill="var(--signal-soft)" stroke="var(--signal)" stroke-width="3">
+        <rect x="264" y="46" width="20" height="32" rx="3"/>
+        <rect x="290" y="46" width="20" height="32" rx="3"/>
+        <rect x="316" y="46" width="20" height="32" rx="3"/>
+        <rect x="342" y="46" width="20" height="32" rx="3"/>
+        <rect x="368" y="46" width="20" height="32" rx="3"/>
+      </g>
+      <g stroke="var(--signal)" stroke-width="2.4" stroke-linecap="round">
+        <path d="M274 38 L274 28"/><path d="M300 38 L300 28"/><path d="M326 38 L326 28"/>
+        <path d="M352 38 L352 28"/><path d="M378 38 L378 28"/>
+        <path d="M262 84 L256 92"/><path d="M288 84 L282 92"/><path d="M314 84 L308 92"/>
+        <path d="M340 84 L334 92"/><path d="M366 84 L360 92"/>
+        <path d="M286 84 L292 92"/><path d="M312 84 L318 92"/><path d="M338 84 L344 92"/>
+      </g>
+      <g fill="none" stroke="var(--muted)" stroke-width="2.5" stroke-dasharray="6 5">
+        <rect x="290" y="120" width="20" height="32" rx="3"/>
+        <rect x="316" y="120" width="20" height="32" rx="3"/>
+      </g>
+      <g stroke="var(--signal)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-dasharray="3 7">
+        <path d="M258 62 L238 84"/>
+        <path d="M262 76 L234 96"/>
+        <path d="M286 100 L238 106"/>
+      </g>
+      <path d="M244 108 L232 108" stroke="var(--signal)" stroke-width="3" stroke-linecap="round"/>
+      <path d="M238 102 L230 109 L238 116" fill="none" stroke="var(--signal)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M348 214 L316 164" fill="none" stroke="var(--signal)" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="312" cy="158" r="7" fill="none" stroke="var(--signal)" stroke-width="3"/>
+    </svg>
+    <figcaption>
+      <span class="num">03</span>
+      <span class="say">② 該用的能力自己亮
+        <span class="purpose">上一層限縮下一層：實線是推薦，虛線是可以再加。</span>
+      </span>
+    </figcaption>
+  </figure>
+
+  <!-- ============ 4 ============ -->
+  <figure class="panel">
+    <svg viewBox="0 0 400 300" role="img" aria-label="漏斗第三層點亮，一張色票卡落進去，旁邊一張被打叉的樣本被擋在漏斗開口之外。">
+      <g stroke="var(--line)" stroke-width="2.5" fill="none">
+        <path d="M70 44 L242 44 L230 84 L82 84 Z"/>
+        <path d="M82 88 L230 88 L219 126 L93 126 Z"/>
+        <path d="M104 170 L208 170 L198 204 L114 204 Z"/>
+        <path d="M114 208 L198 208 L189 242 L123 242 Z"/>
+      </g>
+      <path d="M93 130 L219 130 L208 166 L104 166 Z" fill="var(--signal-soft)" stroke="var(--signal)" stroke-width="3.5"/>
+      <!-- colour swatch going in -->
+      <g transform="rotate(-14 292 96)">
+        <rect x="266" y="76" width="52" height="40" rx="3" fill="var(--panel)" stroke="var(--signal)" stroke-width="3"/>
+        <rect x="273" y="83" width="11" height="26" fill="var(--signal)"/>
+        <rect x="286" y="83" width="11" height="26" fill="var(--machine)"/>
+        <rect x="299" y="83" width="11" height="26" fill="var(--muted)"/>
+      </g>
+      <path d="M262 108 Q222 126 214 138" fill="none" stroke="var(--signal)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="3 8"/>
+      <!-- rejected sample, blocked outside -->
+      <g transform="rotate(6 316 214)">
+        <rect x="286" y="188" width="60" height="52" rx="3" fill="none" stroke="var(--muted)" stroke-width="2.5"/>
+        <g stroke="var(--muted)" stroke-width="2.5" opacity=".7">
+          <path d="M292 232 L336 194"/>
+          <path d="M292 216 L318 190"/>
+          <path d="M300 238 L342 202"/>
+        </g>
+        <g stroke="var(--stop)" stroke-width="4" stroke-linecap="round">
+          <path d="M292 194 L340 234"/>
+          <path d="M340 194 L292 234"/>
+        </g>
+      </g>
+      <!-- barrier between the rejected sample and the funnel -->
+      <path d="M258 182 L258 250" stroke="var(--stop)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="7 6"/>
+      <path d="M280 212 L266 212" stroke="var(--stop)" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M274 206 L264 212 L274 218" fill="none" stroke="var(--stop)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <figcaption>
+      <span class="num">04</span>
+      <span class="say">③ 視覺：給色票，也給禁用清單
+        <span class="purpose">風格包裡「不准做什麼」跟色票一樣重要。</span>
+      </span>
+    </figcaption>
+  </figure>
+
+  <!-- ============ 5 ============ -->
+  <figure class="panel">
+    <svg viewBox="0 0 400 300" role="img" aria-label="漏斗第四層點亮，一個貼標籤的罐子落進去，一支鑰匙被留在旁邊的掛勾上，中間有一條虛線把鑰匙擋在漏斗之外。">
+      <g stroke="var(--line)" stroke-width="2.5" fill="none">
+        <path d="M70 44 L242 44 L230 84 L82 84 Z"/>
+        <path d="M82 88 L230 88 L219 126 L93 126 Z"/>
+        <path d="M93 130 L219 130 L208 166 L104 166 Z"/>
+        <path d="M114 208 L198 208 L189 242 L123 242 Z"/>
+      </g>
+      <path d="M104 170 L208 170 L198 204 L114 204 Z" fill="var(--signal-soft)" stroke="var(--signal)" stroke-width="3.5"/>
+      <!-- labelled jar going in -->
+      <g transform="rotate(10 288 176)">
+        <rect x="268" y="152" width="40" height="50" rx="4" fill="var(--panel)" stroke="var(--signal)" stroke-width="3"/>
+        <line x1="275" y1="146" x2="301" y2="146" stroke="var(--signal)" stroke-width="3" stroke-linecap="round"/>
+        <rect x="274" y="168" width="28" height="18" rx="2" fill="var(--signal-soft)" stroke="var(--signal)" stroke-width="2"/>
+      </g>
+      <path d="M266 194 Q232 202 212 194" fill="none" stroke="var(--signal)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="3 8"/>
+      <!-- key left hanging on a hook, outside -->
+      <line x1="284" y1="34" x2="384" y2="34" stroke="var(--line)" stroke-width="2"/>
+      <path d="M336 34 L336 48" stroke="var(--ink)" stroke-width="3"/>
+      <path d="M336 48 q10 4 0 10" fill="none" stroke="var(--ink)" stroke-width="3"/>
+      <circle cx="336" cy="76" r="14" fill="none" stroke="var(--stop)" stroke-width="3.5"/>
+      <path d="M336 90 L336 122" stroke="var(--stop)" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M336 110 L348 110" stroke="var(--stop)" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M336 120 L346 120" stroke="var(--stop)" stroke-width="3.5" stroke-linecap="round"/>
+      <!-- barrier keeping the key out -->
+      <path d="M256 40 L256 138" stroke="var(--stop)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="7 6"/>
+      <path d="M300 132 L272 132" stroke="var(--stop)" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M280 126 L270 132 L280 138" fill="none" stroke="var(--stop)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <figcaption>
+      <span class="num">05</span>
+      <span class="say">④ 品牌：只放參照，鑰匙留在外面
+        <span class="purpose">包裡記的是「去哪裡拿」，金鑰執行時才解析。</span>
+      </span>
+    </figcaption>
+  </figure>
+
+  <!-- ============ 6 ============ -->
+  <figure class="panel">
+    <svg viewBox="0 0 400 300" role="img" aria-label="漏斗最窄的第五層點亮，檢查印章落進去，旁邊的刻度盤指針越過紅線，下方有一個末端帶擋桿的迴圈箭頭。">
+      <g stroke="var(--line)" stroke-width="2.5" fill="none">
+        <path d="M70 44 L242 44 L230 84 L82 84 Z"/>
+        <path d="M82 88 L230 88 L219 126 L93 126 Z"/>
+        <path d="M93 130 L219 130 L208 166 L104 166 Z"/>
+        <path d="M104 170 L208 170 L198 204 L114 204 Z"/>
+      </g>
+      <path d="M114 208 L198 208 L189 242 L123 242 Z" fill="var(--signal-soft)" stroke="var(--signal)" stroke-width="3.5"/>
+      <!-- stamp going in -->
+      <g transform="rotate(-8 276 226)">
+        <rect x="252" y="216" width="48" height="18" rx="3" fill="var(--signal-soft)" stroke="var(--signal)" stroke-width="3"/>
+        <rect x="268" y="194" width="16" height="22" rx="3" fill="none" stroke="var(--signal)" stroke-width="3"/>
+        <path d="M262 226 L271 234 L288 218" fill="none" stroke="var(--signal)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+      <path d="M248 228 Q222 232 202 226" fill="none" stroke="var(--signal)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="3 8"/>
+      <!-- gauge: needle past the threshold line -->
+      <path d="M270 108 A 52 52 0 0 1 374 108" fill="none" stroke="var(--line)" stroke-width="4" stroke-linecap="round"/>
+      <path d="M352 65 A 52 52 0 0 1 374 108" fill="none" stroke="var(--signal)" stroke-width="4" stroke-linecap="round"/>
+      <path d="M352 65 L358 57" stroke="var(--stop)" stroke-width="3.5" stroke-linecap="round"/>
+      <circle cx="322" cy="108" r="5" fill="var(--ink)"/>
+      <path d="M322 108 L356 80" stroke="var(--ink)" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M270 116 L374 116" stroke="var(--line)" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- bounded repair loop -->
+      <path d="M294 156 a 24 24 0 1 0 24 -24" fill="none" stroke="var(--machine)" stroke-width="3" stroke-linecap="round"/>
+      <path d="M312 124 L318 132 L310 138" fill="none" stroke="var(--machine)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M290 174 L322 174" stroke="var(--machine)" stroke-width="4" stroke-linecap="round"/>
+    </svg>
+    <figcaption>
+      <span class="num">06</span>
+      <span class="say">⑤ 品質：過門檻才算數
+        <span class="purpose">分數要越過紅線，而且重跑次數有上限。</span>
+      </span>
+    </figcaption>
+  </figure>
+
+  <!-- ============ 7 ============ -->
+  <figure class="panel">
+    <svg viewBox="0 0 400 300" role="img" aria-label="漏斗底部接著一個工具箱，箱蓋闔上，一張條列整齊的清單貼在箱子外側，每一行都打了勾。">
+      <g stroke="var(--line)" stroke-width="2.5" fill="none">
+        <path d="M120 16 L256 16 L244 46 L132 46 Z"/>
+        <path d="M132 50 L244 50 L234 78 L142 78 Z"/>
+      </g>
+      <path d="M142 82 L234 82 L226 108 L150 108 Z" fill="var(--signal-soft)" stroke="var(--signal)" stroke-width="3"/>
+      <rect x="120" y="140" width="140" height="106" rx="5" fill="none" stroke="var(--ink)" stroke-width="3.5"/>
+      <path d="M116 140 L264 140" stroke="var(--ink)" stroke-width="4" stroke-linecap="round"/>
+      <path d="M158 128 L222 128 L222 140 L158 140 Z" fill="var(--panel)" stroke="var(--ink)" stroke-width="3"/>
+      <path d="M176 128 Q190 110 204 128" fill="none" stroke="var(--ink)" stroke-width="3.5"/>
+      <g stroke="var(--muted)" stroke-width="2.5" stroke-linecap="round">
+        <path d="M132 122 L136 132"/>
+        <path d="M248 122 L244 132"/>
+      </g>
+      <g stroke="var(--signal)" stroke-width="3" stroke-linecap="round">
+        <path d="M140 168 L140 190"/><path d="M154 168 L154 190"/><path d="M168 168 L168 190"/>
+      </g>
+      <g>
+        <rect x="264" y="118" width="112" height="132" rx="3" fill="var(--panel)" stroke="var(--ink)" stroke-width="3"/>
+        <line x1="276" y1="138" x2="364" y2="138" stroke="var(--ink)" stroke-width="3"/>
+        <g stroke="var(--muted)" stroke-width="2.5" stroke-linecap="round">
+          <path d="M292 160 L364 160"/>
+          <path d="M292 182 L364 182"/>
+          <path d="M292 204 L364 204"/>
+          <path d="M292 226 L350 226"/>
+        </g>
+        <g stroke="var(--signal)" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M274 159 L279 164 L286 154"/>
+          <path d="M274 181 L279 186 L286 176"/>
+          <path d="M274 203 L279 208 L286 198"/>
+          <path d="M274 225 L279 230 L286 220"/>
+        </g>
+      </g>
+      <line x1="260" y1="150" x2="266" y2="150" stroke="var(--ink)" stroke-width="3"/>
+    </svg>
+    <figcaption>
+      <span class="num">07</span>
+      <span class="say">選擇不會散在對話裡
+        <span class="purpose">全部裝進同一個包，外面貼著一張看得懂的清單。</span>
+      </span>
+    </figcaption>
+  </figure>
+
+  <!-- ============ 8 ============ -->
+  <figure class="panel">
+    <svg viewBox="0 0 400 300" role="img" aria-label="一道門把畫面分成兩半，門內的人把貼著清單的工具箱遞到門檻上，門外戴安全帽的角色接過去、在施工架前開始動工。">
+      <g stroke="var(--machine-soft)" stroke-width="3" fill="none">
+        <path d="M296 40 L296 250"/>
+        <path d="M356 40 L356 250"/>
+        <path d="M290 96 L362 96"/>
+        <path d="M290 156 L362 156"/>
+        <path d="M290 216 L362 216"/>
+      </g>
+      <path d="M206 26 L206 264" stroke="var(--ink)" stroke-width="4"/>
+      <path d="M206 26 L262 26" stroke="var(--ink)" stroke-width="4" stroke-linecap="round"/>
+      <path d="M262 26 L262 264" stroke="var(--line)" stroke-width="3" stroke-dasharray="9 7"/>
+      <path d="M16 264 L384 264" stroke="var(--ink)" stroke-width="3"/>
+      <circle cx="86" cy="104" r="20" fill="none" stroke="var(--signal)" stroke-width="3"/>
+      <path d="M58 264 L64 152 Q86 138 108 152 L114 264" fill="none" stroke="var(--signal)" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M108 160 L156 188" fill="none" stroke="var(--signal)" stroke-width="3" stroke-linecap="round"/>
+      <rect x="196" y="188" width="76" height="56" rx="4" fill="var(--panel)" stroke="var(--ink)" stroke-width="3.5"/>
+      <path d="M192 188 L276 188" stroke="var(--ink)" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M222 176 Q234 160 246 176" fill="none" stroke="var(--ink)" stroke-width="3"/>
+      <rect x="206" y="202" width="34" height="34" rx="2" fill="var(--panel)" stroke="var(--muted)" stroke-width="2"/>
+      <g stroke="var(--signal)" stroke-width="2.2" stroke-linecap="round">
+        <path d="M212 212 L234 212"/><path d="M212 220 L234 220"/><path d="M212 228 L228 228"/>
+      </g>
+      <path d="M300 96 Q322 74 344 96" fill="var(--machine-soft)" stroke="var(--machine)" stroke-width="3"/>
+      <path d="M294 96 L350 96" stroke="var(--machine)" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="322" cy="116" r="17" fill="none" stroke="var(--machine)" stroke-width="3"/>
+      <path d="M296 264 L302 160 Q322 146 342 160 L348 264" fill="none" stroke="var(--machine)" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M302 168 L266 200" fill="none" stroke="var(--machine)" stroke-width="3" stroke-linecap="round"/>
+      <path d="M162 192 L192 200" stroke="var(--muted)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="3 7"/>
+      <path d="M276 202 L262 198" stroke="var(--muted)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="3 7"/>
+    </svg>
+    <figcaption>
+      <span class="num">08</span>
+      <span class="say">VSC 打包，VAD 開工
+        <span class="purpose">組裝與執行刻意分開，門內的人不跟出去。</span>
+      </span>
+    </figcaption>
+  </figure>
+
+</div>
+
+<hr class="rule">
+
+<h2>這八格在講的五件事</h2>
+<p class="lede">分鏡先於畫風：先決定每格「畫面裡發生什麼事」，才決定怎麼畫。</p>
+<ul class="points">
+  <li><b>01</b><span>一句模糊需求丟給 AI，AI 只能猜，猜錯的成本由人承擔。</span></li>
+  <li><b>02</b><span>五層依序收斂，每一層只決定一件事，且會限縮下一層。</span></li>
+  <li><b>03</b><span>風格包不只給色票，也給一份明確的禁用清單。</span></li>
+  <li><b>04</b><span>品牌只放參照，金鑰留在包外，執行時才解析。</span></li>
+  <li><b>05</b><span>VSC 只負責打包，VAD 才負責開工，兩者刻意分開。</span></li>
+</ul>
+
+<div class="cols">
+  <section>
+    <h2>這張漫畫怎麼來的</h2>
+    <p class="lede">它自己就是走過一次 VAD 標準流程的產物，用的是 <code>VAC-COMIC-001</code>。</p>
+    <p class="flow">主題<br>
+      → <b>P01</b> 定學習目標與核心問題<br>
+      → <b>P02</b> 萃取 5 個關鍵知識點<br>
+      → <b>P03</b> 轉成視覺隱喻<br>
+      → <b>P04</b> 建 8 格 Storyboard<br>
+      → <b>P05</b> QA 評分<br>
+      → <b>P06</b> 產出
+    </p>
+  </section>
+
+  <section>
+    <h2>QA 評分</h2>
+    <p class="lede">門檻 85 分，且知識正確性與遮字可理解性各有獨立門檻。</p>
+    <div class="scroller">
+      <table>
+        <caption>VAD-Comic-Notes rubric｜八格版 vs 六格版</caption>
+        <thead>
+          <tr><th>項目</th><th class="n">配分</th><th class="n">六格</th><th class="n">八格</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>知識正確性</td><td class="n">20</td><td class="n was">19</td><td class="n">19</td></tr>
+          <tr><td>遮字後可理解性</td><td class="n">20</td><td class="n was">17</td><td class="n">17</td></tr>
+          <tr><td>一格一重點</td><td class="n">10</td><td class="n was">8</td><td class="n up">10</td></tr>
+          <tr><td>視覺隱喻品質</td><td class="n">15</td><td class="n was">14</td><td class="n">14</td></tr>
+          <tr><td>故事與因果流暢度</td><td class="n">10</td><td class="n was">10</td><td class="n">10</td></tr>
+          <tr><td>教學清晰度</td><td class="n">10</td><td class="n was">9</td><td class="n up">10</td></tr>
+          <tr><td>文字壓縮</td><td class="n">5</td><td class="n was">5</td><td class="n">5</td></tr>
+          <tr><td>分鏡一致性</td><td class="n">5</td><td class="n was">5</td><td class="n">5</td></tr>
+          <tr><td>錯字與格式</td><td class="n">5</td><td class="n was">5</td><td class="n">5</td></tr>
+          <tr class="total"><td>總分</td><td class="n">100</td><td class="n was">92</td><td class="n up">95</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="flag">
+      <b>+2 一格一重點</b>　原本第 4 格塞了視覺、品牌、品控三層，現在各自獨立成格。<br>
+      <b>+1 教學清晰度</b>　一層一格之後可以逐格暫停講解。<br>
+      <b>遮字可理解性維持 17</b>　工具發光改用放射線讓靜態畫面讀得出來，但第 4、5 格新增的「被擋在外面」屬於較細緻的線索，遮住文字只讀得到「這個進去、那個留在外面」，讀不到它是禁用清單還是金鑰。這一項沒有實質變好。
+    </p>
+  </section>
+</div>
+
+<footer>
+  分鏡原始檔：<code>examples/vsc-flow-8panel.storyboard.json</code>，通過 VAD-Comic-Notes storyboard schema 驗證。
+  組裝器本體在 <a href="https://draiagent.github.io/visual-skill-composer/">visual-skill-composer</a>，
+  執行端接口見 <a href="https://github.com/draiagent/Visual-Agent-Design/blob/main/docs/VSC-INTERFACE.md">VSC-INTERFACE</a>。
+</footer>
+</div>
+</body>
+</html>

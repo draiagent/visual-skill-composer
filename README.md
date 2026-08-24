@@ -33,6 +33,20 @@ design, storytelling, and infographic — and suggests research and Vision Judge
 
 ---
 
+## See the flow as a comic
+
+**[技能包的五層漏斗](https://draiagent.github.io/visual-skill-composer/comic/)** — an
+eight-panel comic note walking through the five layers, one layer per panel. Cover the
+text and the panels still read.
+
+It was produced by running VAD's `VAC-COMIC-001` card end to end, so it doubles as a
+worked example of the handoff this repo describes: storyboard first, QA against a
+rubric, then draw. The storyboard source is
+[`examples/vsc-flow-8panel.storyboard.json`](./examples/vsc-flow-8panel.storyboard.json),
+validated against the VAD-Comic-Notes storyboard schema.
+
+---
+
 ## VSC and VAD
 
 These are deliberately **two projects, not one**.
@@ -173,6 +187,7 @@ visual-skill-composer/
 ├── install/               Global Claude Code skill
 ├── tools/                 validate.py, check_consistency.py, gen_skill_docs.py
 ├── index.html             GitHub Pages entry, redirects to ui/
+├── comic/                 Eight-panel comic note explaining the flow
 ├── ui/index.html          The composer (single file, no build)
 └── examples/              Sample manifests
 ```
