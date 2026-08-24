@@ -71,6 +71,11 @@ VSC never executes anything. It composes, validates, and hands off.
 
 ## Quick start
 
+**Use it now:** <https://draiagent.github.io/visual-skill-composer/> — no install, nothing
+leaves your browser.
+
+Or run it locally:
+
 ```bash
 git clone https://github.com/draiagent/visual-skill-composer.git
 cd visual-skill-composer
@@ -154,6 +159,7 @@ visual-skill-composer/
 ├── qa-packs/              How strictly it is checked
 ├── schemas/               JSON Schema for the manifest
 ├── tools/                 validate.py, check_consistency.py, gen_skill_docs.py
+├── index.html             GitHub Pages entry, redirects to ui/
 ├── ui/index.html          The composer (single file, no build)
 └── examples/              Sample manifests
 ```

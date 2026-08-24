@@ -76,6 +76,11 @@ VSC 本身不執行任何東西，它只負責組裝、驗證、交棒。
 
 ## 快速開始
 
+**直接使用：**<https://draiagent.github.io/visual-skill-composer/> — 免安裝，
+所有選擇都留在你的瀏覽器裡，不會送出去。
+
+或在本機跑：
+
 ```bash
 git clone https://github.com/draiagent/visual-skill-composer.git
 cd visual-skill-composer
@@ -160,6 +165,7 @@ visual-skill-composer/
 ├── qa-packs/              檢查多嚴格
 ├── schemas/               Manifest 的 JSON Schema
 ├── tools/                 validate.py、check_consistency.py、gen_skill_docs.py
+├── index.html             GitHub Pages 入口，導向 ui/
 ├── ui/index.html          組裝介面（單一檔案、免打包）
 └── examples/              範例 manifest
 ```
