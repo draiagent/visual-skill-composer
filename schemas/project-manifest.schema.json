@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/draiagent/visual-skill-composer/schemas/project-manifest.schema.json",
+  "title": "VSC Project Manifest",
+  "description": "The machine-readable output of Visual Skill Composer. Consumed by VAD (Visual Agent Design) or any agent runtime.",
+  "type": "object",
+  "required": ["vsc_version", "project", "skills"],
+  "additionalProperties": false,
+  "properties": {
+    "vsc_version": {
+      "type": "string",
+      "description": "Manifest format version.",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "project": {
+      "type": "object",
+      "required": ["type"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Project pack id from project-packs/.",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "title": { "type": "string", "maxLength": 200 },
+        "language": {
+          "type": "string",
+          "description": "BCP-47 tag for the deliverable language. Defaults to whichever language the composer UI was set to when the manifest was built.",
+          "default": "zh-TW"
+        },
+        "audience": { "type": "string", "maxLength": 200 },
+        "notes": { "type": "string", "maxLength": 2000 }
+      }
+    },
+    "skills": {
+      "type": "array",
+      "description": "Skill ids from registry/skills.json. Always English kebab-case.",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" }
+    },
+    "visual": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "style": { "type": "string", "description": "Style pack id from style-packs/." },
+        "overrides": {
+          "type": "object",
+          "description": "Token-level overrides applied on top of the style pack.",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "brand": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "type": "string",
+          "enum": ["none", "local", "figma", "github", "upload"]
+        },
+        "ref": {
+          "type": "string",
+          "description": "Pointer to the brand pack: path, repo slug, or file key. Never a secret."
+        }
+      }
+    },
+    "quality": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "pack": { "type": "string", "description": "QA pack id from qa-packs/." },
+        "vision_judge": { "type": "boolean", "default": false },
+        "text_check": { "type": "boolean", "default": false },
+        "brand_check": { "type": "boolean", "default": false },
+        "auto_repair": { "type": "boolean", "default": false },
+        "threshold": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "max_repair_rounds": { "type": "integer", "minimum": 0, "maximum": 10 }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "description": "Optional hints for the downstream executor. VSC never executes anything itself.",
+      "additionalProperties": false,
+      "properties": {
+        "target": {
+          "type": "string",
+          "enum": ["vad", "claude-code", "codex", "gemini-cli", "generic"],
+          "default": "vad"
+        },
+        "created": { "type": "string", "format": "date" },
+        "created_by": { "type": "string" }
+      }
+    }
+  }
+}

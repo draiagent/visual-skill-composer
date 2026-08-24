@@ -1,0 +1,14 @@
+id: tech-future
+label: { en: "Tech Future", zh-TW: "科技未來" }
+principles:
+  en: Deep navy ground, neon gradient accents, high contrast, glow as hierarchy.
+  zh-TW: 深藏青底、霓虹漸層強調、高對比，用光暈製造層次。
+tokens:
+  bg: "#0B1020"
+  fg: "#F2F5FF"
+  accent: "#4DA3FF"
+  accent2: "#C05CFF"
+  muted: "#7E8AAE"
+  radius: "16px"
+  font_display: "Inter, Noto Sans TC, sans-serif"
+avoid: [beige-backgrounds, hairline-serif-body]

@@ -1,0 +1,19 @@
+id: infographic-card
+label:
+  en: Infographic Card / Carousel
+  zh-TW: 資訊圖卡／輪播
+icon: "🧩"
+summary:
+  en: One point per card, swipeable, readable on a phone at arm's length.
+  zh-TW: 一頁一重點、可滑動閱讀，手機一臂距離看得清楚。
+recommended_skills:
+  - infographic
+  - storytelling
+  - brand-system
+  - image-generation
+suggested_skills:
+  - data-visualization
+  - text-check
+  - vision-judge
+default_style: tech-future
+default_qa: standard

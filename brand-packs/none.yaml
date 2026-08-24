@@ -1,0 +1,6 @@
+id: none
+label: { en: "No Brand", zh-TW: "不套用品牌" }
+source: none
+note:
+  en: Style pack tokens are used directly; no brand override.
+  zh-TW: 直接使用風格包 token，不做品牌覆寫。

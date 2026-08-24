@@ -1,0 +1,5 @@
+id: strict
+label: { en: "Strict", zh-TW: "嚴格檢查" }
+checks: [vision-judge, text-check, brand-check, auto-repair]
+threshold: 92
+max_repair_rounds: 4

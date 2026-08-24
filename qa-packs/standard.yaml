@@ -1,0 +1,5 @@
+id: standard
+label: { en: "Standard", zh-TW: "標準檢查" }
+checks: [vision-judge, text-check, brand-check]
+threshold: 80
+max_repair_rounds: 2

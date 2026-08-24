@@ -1,0 +1,19 @@
+id: academic-presentation
+label:
+  en: Academic / Course Presentation
+  zh-TW: 大學教學簡報
+icon: "🖥"
+summary:
+  en: Lecture-grade slides for a classroom or conference, projector-legible.
+  zh-TW: 適合教室或研討會投影的授課級簡報，遠距可讀。
+recommended_skills:
+  - instructional-design
+  - storytelling
+  - presentation-design
+  - infographic
+  - data-visualization
+suggested_skills:
+  - research
+  - vision-judge
+default_style: swiss-editorial
+default_qa: standard

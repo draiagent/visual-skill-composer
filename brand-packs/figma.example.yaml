@@ -1,0 +1,10 @@
+id: figma
+label: { en: "Figma Design System", zh-TW: "Figma 設計系統" }
+source: figma
+config:
+  file_key: "<FIGMA_FILE_KEY>"
+  auth: env:FIGMA_TOKEN
+note:
+  en: Never commit the token. VSC only records the reference; VAD resolves it at run time.
+  zh-TW: 絕不把 token 提交進版控。VSC 只記錄參照，實際解析由 VAD 在執行時完成。
+resolves: [colors, fonts, tokens, components]

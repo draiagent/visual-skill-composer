@@ -1,0 +1,17 @@
+id: comic
+label:
+  en: Comic Notes
+  zh-TW: 漫畫筆記
+icon: "💬"
+summary:
+  en: Knowledge redrawn as panels understandable even with the text covered.
+  zh-TW: 把知識重畫成分鏡，遮住文字也看得懂。
+recommended_skills:
+  - storytelling
+  - infographic
+  - image-generation
+suggested_skills:
+  - instructional-design
+  - vision-judge
+default_style: bauhaus
+default_qa: standard

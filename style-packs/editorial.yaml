@@ -1,0 +1,13 @@
+id: editorial
+label: { en: "Editorial", zh-TW: "編輯設計" }
+principles:
+  en: Magazine rhythm — big serif heads, measured columns, pull quotes.
+  zh-TW: 雜誌節奏——大字級襯線標題、控制欄寬、引言區塊。
+tokens:
+  bg: "#FBF9F4"
+  fg: "#1A1A1A"
+  accent: "#7A2E2E"
+  muted: "#6F6A61"
+  radius: "2px"
+  font_display: "Source Serif 4, Noto Serif TC, serif"
+avoid: [neon, heavy-ui-chrome]

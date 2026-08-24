@@ -1,0 +1,17 @@
+id: video
+label:
+  en: Video / Short-form
+  zh-TW: 影片／短影音
+icon: "🎬"
+summary:
+  en: Storyboard-first motion piece with a hook in the first three seconds.
+  zh-TW: 以分鏡為先的動態作品，前三秒必須有鉤子。
+recommended_skills:
+  - storytelling
+  - motion
+  - image-generation
+suggested_skills:
+  - brand-system
+  - vision-judge
+default_style: tech-future
+default_qa: standard

@@ -1,0 +1,27 @@
+{
+  "vsc_version": "0.1.0",
+  "project": {
+    "type": "infographic-card",
+    "language": "zh-TW",
+    "title": "AI Agent 五層架構懶人包"
+  },
+  "skills": [
+    "infographic",
+    "storytelling",
+    "brand-system",
+    "image-generation",
+    "text-check"
+  ],
+  "visual": { "style": "tech-future" },
+  "brand": { "source": "local", "ref": "./brand/tokens.json" },
+  "quality": {
+    "pack": "strict",
+    "vision_judge": true,
+    "text_check": true,
+    "brand_check": true,
+    "auto_repair": true,
+    "threshold": 92,
+    "max_repair_rounds": 4
+  },
+  "runtime": { "target": "claude-code", "created": "2026-08-24" }
+}

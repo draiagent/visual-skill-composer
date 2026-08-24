@@ -1,0 +1,5 @@
+id: light
+label: { en: "Light", zh-TW: "輕量檢查" }
+checks: [text-check]
+threshold: 60
+max_repair_rounds: 0

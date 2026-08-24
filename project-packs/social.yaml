@@ -1,0 +1,17 @@
+id: social
+label:
+  en: Social Post
+  zh-TW: 社群貼文
+icon: "📱"
+summary:
+  en: Platform-shaped visuals plus copy, sized per channel.
+  zh-TW: 依平台尺寸設計的視覺加文案。
+recommended_skills:
+  - storytelling
+  - brand-system
+  - image-generation
+suggested_skills:
+  - infographic
+  - text-check
+default_style: glassmorphism
+default_qa: light

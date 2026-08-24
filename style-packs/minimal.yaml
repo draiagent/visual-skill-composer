@@ -1,0 +1,13 @@
+id: minimal
+label: { en: "Minimal", zh-TW: "極簡設計" }
+principles:
+  en: Remove until it breaks, then add one thing back. Neutral palette, one accent.
+  zh-TW: 一直刪到壞掉為止，再加回一項。中性色盤，單一強調色。
+tokens:
+  bg: "#FAFAFA"
+  fg: "#171717"
+  accent: "#2563EB"
+  muted: "#A3A3A3"
+  radius: "8px"
+  font_display: "Inter, Noto Sans TC, sans-serif"
+avoid: [decorative-borders, more-than-two-typefaces]

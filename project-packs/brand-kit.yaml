@@ -1,0 +1,16 @@
+id: brand-kit
+label:
+  en: Brand System
+  zh-TW: 品牌系統
+icon: "🎨"
+summary:
+  en: Tokens, components, and rules other projects will import.
+  zh-TW: 供其他專案匯入的設計 token、元件與規則。
+recommended_skills:
+  - brand-system
+  - infographic
+suggested_skills:
+  - image-generation
+  - brand-check
+default_style: swiss-editorial
+default_qa: strict

@@ -1,0 +1,8 @@
+id: local
+label: { en: "My Brand", zh-TW: "我的品牌" }
+source: local
+paths:
+  tokens: ./brand/tokens.json
+  logo: ./brand/logo.svg
+  fonts: ./brand/fonts/
+resolves: [logo, colors, fonts, tokens, components, assets, templates]

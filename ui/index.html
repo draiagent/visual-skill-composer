@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Visual Skill Composer — 視覺化 AI 技能組裝系統</title>
+<style>
+  :root{
+    --bg:#0B1020; --panel:#141B33; --panel2:#1B2444; --line:#2A3564;
+    --fg:#F2F5FF; --muted:#93A0C8; --accent:#4DA3FF; --ok:#3DDC97; --radius:16px;
+    --font:"Inter","Noto Sans TC","Microsoft JhengHei",sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font);
+       font-size:18px;line-height:1.65;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:32px 20px 96px}
+  header{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;
+         padding-bottom:20px;border-bottom:1px solid var(--line)}
+  .brand h1{margin:0;font-size:26px;letter-spacing:-.5px}
+  .brand p{margin:4px 0 0;color:var(--muted);font-size:15px}
+  .langsw button{background:none;border:1px solid var(--line);color:var(--muted);
+        padding:7px 14px;border-radius:999px;cursor:pointer;font-size:15px;font-family:inherit}
+  .langsw button.on{background:var(--accent);border-color:var(--accent);color:#06101F;font-weight:600}
+
+  .steps{display:flex;gap:8px;flex-wrap:wrap;margin:24px 0 8px}
+  .steps div{font-size:14px;color:var(--muted);border:1px solid var(--line);
+        border-radius:999px;padding:5px 12px;white-space:nowrap}
+  .steps div.on{border-color:var(--accent);color:var(--accent)}
+  .steps div.done{border-color:var(--ok);color:var(--ok)}
+
+  section{margin-top:36px}
+  h2{font-size:22px;margin:0 0 6px}
+  .hint{color:var(--muted);font-size:15px;margin:0 0 18px}
+
+  .grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+        padding:18px;cursor:pointer;transition:.15s;text-align:left;font-family:inherit;color:inherit}
+  .card:hover{border-color:var(--accent);transform:translateY(-2px)}
+  .card.sel{border-color:var(--accent);background:var(--panel2);
+        box-shadow:0 0 0 1px var(--accent), 0 10px 30px -18px var(--accent)}
+  .card .ico{font-size:30px;line-height:1}
+  .card .t{font-weight:600;margin-top:10px;font-size:17px}
+  .card .s{color:var(--muted);font-size:14px;margin-top:6px}
+
+  .tokens{display:flex;flex-wrap:wrap;gap:10px}
+  .tok{border:1px solid var(--line);background:var(--panel);border-radius:999px;
+       padding:9px 16px;cursor:pointer;font-size:16px;font-family:inherit;color:var(--fg);transition:.12s}
+  .tok:hover{border-color:var(--accent)}
+  .tok.on{background:var(--accent);border-color:var(--accent);color:#06101F;font-weight:600}
+  .tok .why{font-size:12px;opacity:.75;margin-left:6px}
+  .tok.sugg{border-style:dashed}
+  .catrow{margin:16px 0}
+  .catrow h3{font-size:15px;color:var(--muted);font-weight:500;margin:0 0 8px;letter-spacing:.5px}
+
+  .preview{height:110px;border-radius:10px;overflow:hidden;display:flex;
+           flex-direction:column;justify-content:flex-end;padding:12px;gap:6px}
+  .preview .bar{height:8px;border-radius:99px}
+  .preview .head{font-weight:700;font-size:15px;line-height:1.2}
+
+  .field{display:block;margin:0 0 14px}
+  .field span{display:block;font-size:14px;color:var(--muted);margin-bottom:6px}
+  input[type=text]{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:10px;
+        padding:12px 14px;color:var(--fg);font-size:16px;font-family:inherit}
+  input[type=text]:focus{outline:none;border-color:var(--accent)}
+
+  .summary{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:24px}
+  .summary .row{display:grid;grid-template-columns:110px 1fr;gap:14px;padding:12px 0;
+        border-bottom:1px dashed var(--line);align-items:start}
+  .summary .row:last-child{border-bottom:none}
+  .summary .k{color:var(--muted);font-size:15px}
+  .chip{display:inline-block;background:var(--panel2);border:1px solid var(--line);
+        border-radius:999px;padding:4px 12px;font-size:14px;margin:0 6px 6px 0}
+  .chip.q{border-color:var(--ok);color:var(--ok)}
+
+  .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+  .btn{background:var(--accent);color:#06101F;border:none;border-radius:12px;padding:14px 24px;
+       font-size:17px;font-weight:600;cursor:pointer;font-family:inherit}
+  .btn.ghost{background:none;border:1px solid var(--line);color:var(--fg);font-weight:500}
+
+  pre{background:#070B18;border:1px solid var(--line);border-radius:12px;padding:18px;
+      overflow:auto;font-size:14px;line-height:1.6;color:#CFE0FF;margin:18px 0 0}
+  .tabs{display:flex;gap:8px;margin-top:20px}
+  .tabs button{background:none;border:1px solid var(--line);color:var(--muted);border-radius:8px;
+        padding:6px 14px;cursor:pointer;font-family:inherit;font-size:14px}
+  .tabs button.on{border-color:var(--accent);color:var(--accent)}
+  footer{margin-top:56px;color:var(--muted);font-size:14px;border-top:1px solid var(--line);padding-top:20px}
+  @media(max-width:600px){ body{font-size:17px} .summary .row{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="brand">
+    <h1>Visual Skill Composer</h1>
+    <p data-i="tagline"></p>
+  </div>
+  <div class="langsw">
+    <button id="btn-zh" class="on" onclick="setLang('zh-TW')">繁體中文</button>
+    <button id="btn-en" onclick="setLang('en')">English</button>
+  </div>
+</header>
+
+<div class="steps" id="steps"></div>
+
+<section>
+  <h2 data-i="s1h"></h2>
+  <p class="hint" data-i="s1p"></p>
+  <div class="grid" id="projects"></div>
+  <label class="field" style="margin-top:18px">
+    <span data-i="titlelabel"></span>
+    <input type="text" id="ptitle" oninput="render()">
+  </label>
+</section>
+
+<section id="sec-skills" hidden>
+  <h2 data-i="s2h"></h2>
+  <p class="hint" data-i="s2p"></p>
+  <div id="skills"></div>
+</section>
+
+<section id="sec-style" hidden>
+  <h2 data-i="s3h"></h2>
+  <p class="hint" data-i="s3p"></p>
+  <div class="grid" id="styles"></div>
+</section>
+
+<section id="sec-brand" hidden>
+  <h2 data-i="s4h"></h2>
+  <p class="hint" data-i="s4p"></p>
+  <div class="grid" id="brands"></div>
+</section>
+
+<section id="sec-qa" hidden>
+  <h2 data-i="s5h"></h2>
+  <p class="hint" data-i="s5p"></p>
+  <div class="grid" id="qas"></div>
+</section>
+
+<section id="sec-result" hidden>
+  <h2 data-i="s6h"></h2>
+  <p class="hint" data-i="s6p"></p>
+  <div class="summary" id="summary"></div>
+  <div class="actions">
+    <button class="btn" onclick="build()" data-i="build"></button>
+    <button class="btn ghost" onclick="copyOut()" data-i="copy"></button>
+    <button class="btn ghost" onclick="downloadManifest()" data-i="save"></button>
+  </div>
+  <div id="outwrap" hidden>
+    <div class="tabs">
+      <button id="tab-yaml" class="on" onclick="setFmt('yaml')">YAML</button>
+      <button id="tab-json" onclick="setFmt('json')">JSON</button>
+    </div>
+    <pre id="out"></pre>
+  </div>
+</section>
+
+<footer><span data-i="foot"></span></footer>
+</div>
+
+<script>
+var NL = String.fromCharCode(10);
+var LANG = 'zh-TW', FMT = 'yaml';
+
+var I18N = {
+  'zh-TW': {
+    tagline: '讓你用「選、組、看」的方式，建立專案需要的 AI 技能組合。',
+    s1h: '① 你今天想完成什麼？', s1p: '先決定要交付的成品類型，後面每一層都會跟著調整。',
+    titlelabel: '專案名稱（選填）',
+    s2h: '② 這個專案需要哪些能力？', s2p: '打勾的是系統推薦，虛線框是建議加入。你可以自由增減。',
+    s3h: '③ 你希望作品呈現什麼風格？', s3p: '風格包會決定色彩、字級、圓角與該避免的做法。',
+    s4h: '④ 套用哪一套品牌系統？', s4p: 'VSC 只記錄品牌來源的參照，實際解析在執行階段才做，不在此存放金鑰。',
+    s5h: '⑤ 品質控制要到什麼程度？', s5p: '決定要跑哪些檢查、通過門檻，以及自動修正的重跑次數。',
+    s6h: '我的 AI 專案技能包', s6p: '確認無誤後產生機器可讀的 Project Manifest，交給 VAD 或任何 agent runtime 執行。',
+    build: '▶ 建立技能包', copy: '複製', save: '儲存為我的 Project',
+    steps: ['專案','技能','視覺','品牌','品控','結果'],
+    kproject:'專案', kskills:'技能', kvisual:'視覺', kbrand:'品牌', kqa:'品質控制',
+    recommended:'推薦', suggested:'建議加入', copied:'已複製',
+    foot: 'Visual Skill Composer (VSC) 決定「要帶哪些工具出門」；Visual Agent Design (VAD) 決定「這些工具怎麼完成工作」。'
+  },
+  'en': {
+    tagline: 'Pick, compose, and see the AI skill set a project actually needs.',
+    s1h: '1. What are you making today?', s1p: 'Choose the deliverable first — every layer below adapts to it.',
+    titlelabel: 'Project title (optional)',
+    s2h: '2. Which capabilities does it need?', s2p: 'Checked ones are recommended; dashed ones are suggested. Add or drop freely.',
+    s3h: '3. How should the work look?', s3p: 'A style pack fixes colour, type scale, radius, and what to avoid.',
+    s4h: '4. Which brand system applies?', s4p: 'VSC records only a reference to the brand source. Resolution happens at run time; no secrets are stored here.',
+    s5h: '5. How strict is quality control?', s5p: 'Sets which checks run, the pass threshold, and how many repair rounds are allowed.',
+    s6h: 'My AI Project Skill Pack', s6p: 'Generate a machine-readable Project Manifest for VAD or any agent runtime.',
+    build: 'Build skill pack', copy: 'Copy', save: 'Save as my project',
+    steps: ['Project','Skills','Visual','Brand','QA','Result'],
+    kproject:'Project', kskills:'Skills', kvisual:'Visual', kbrand:'Brand', kqa:'Quality',
+    recommended:'recommended', suggested:'suggested', copied:'Copied',
+    foot: 'VSC decides which tools you take with you. VAD decides how those tools get the job done.'
+  }
+};
+
+var CATS = [
+  {id:'narrative',  label:{'zh-TW':'敘事','en':'Narrative'}},
+  {id:'knowledge',  label:{'zh-TW':'知識','en':'Knowledge'}},
+  {id:'visual',     label:{'zh-TW':'視覺','en':'Visual'}},
+  {id:'production', label:{'zh-TW':'產製','en':'Production'}},
+  {id:'quality',    label:{'zh-TW':'品質控制','en':'Quality Control'}}
+];
+
+var SKILLS = [
+  {id:'storytelling',         cat:'narrative',  label:{'zh-TW':'故事敘事','en':'Storytelling'}},
+  {id:'instructional-design', cat:'knowledge',  label:{'zh-TW':'教學設計','en':'Instructional Design'}},
+  {id:'research',             cat:'knowledge',  label:{'zh-TW':'研究分析','en':'Research'}},
+  {id:'infographic',          cat:'visual',     label:{'zh-TW':'資訊圖解','en':'Infographic'}},
+  {id:'data-visualization',   cat:'visual',     label:{'zh-TW':'資料視覺化','en':'Data Visualization'}},
+  {id:'brand-system',         cat:'visual',     label:{'zh-TW':'品牌系統','en':'Brand System'}},
+  {id:'presentation-design',  cat:'production', label:{'zh-TW':'簡報設計','en':'Presentation Design'}},
+  {id:'image-generation',     cat:'production', label:{'zh-TW':'AI 圖像生成','en':'AI Image Generation'}},
+  {id:'motion',               cat:'production', label:{'zh-TW':'動畫效果','en':'Motion & Animation'}},
+  {id:'vision-judge',         cat:'quality',    label:{'zh-TW':'視覺品質評估','en':'Vision Judge'}},
+  {id:'text-check',           cat:'quality',    label:{'zh-TW':'文字檢查','en':'Text Check'}},
+  {id:'brand-check',          cat:'quality',    label:{'zh-TW':'品牌檢查','en':'Brand Check'}},
+  {id:'auto-repair',          cat:'quality',    label:{'zh-TW':'自動修正','en':'Auto Repair'}}
+];
+
+var PROJECTS = [
+  {id:'academic-presentation', ico:'🖥', label:{'zh-TW':'大學教學簡報','en':'Course Presentation'},
+   sum:{'zh-TW':'授課級投影片，遠距可讀','en':'Lecture-grade, projector-legible slides'},
+   rec:['instructional-design','storytelling','presentation-design','infographic','data-visualization'],
+   sug:['research','vision-judge'], style:'swiss-editorial', qa:'standard'},
+  {id:'website', ico:'🌐', label:{'zh-TW':'網站／登陸頁','en':'Website / Landing'},
+   sum:{'zh-TW':'單一目的、促成轉換的頁面','en':'A single-purpose page that converts'},
+   rec:['storytelling','brand-system','infographic'], sug:['motion','image-generation','vision-judge'],
+   style:'minimal', qa:'standard'},
+  {id:'video', ico:'🎬', label:{'zh-TW':'影片／短影音','en':'Video / Short-form'},
+   sum:{'zh-TW':'分鏡為先，前三秒有鉤子','en':'Storyboard-first, hook in three seconds'},
+   rec:['storytelling','motion','image-generation'], sug:['brand-system','vision-judge'],
+   style:'tech-future', qa:'standard'},
+  {id:'dashboard', ico:'📈', label:{'zh-TW':'儀表板','en':'Dashboard'},
+   sum:{'zh-TW':'每個像素都要有理由','en':'Every pixel must earn its place'},
+   rec:['data-visualization','brand-system'], sug:['research','text-check','vision-judge'],
+   style:'minimal', qa:'strict'},
+  {id:'infographic-card', ico:'🧩', label:{'zh-TW':'資訊圖卡','en':'Infographic Card'},
+   sum:{'zh-TW':'一頁一重點，可滑動閱讀','en':'One point per card, swipeable'},
+   rec:['infographic','storytelling','brand-system','image-generation'],
+   sug:['data-visualization','text-check','vision-judge'], style:'tech-future', qa:'standard'},
+  {id:'report', ico:'📑', label:{'zh-TW':'報告','en':'Report'},
+   sum:{'zh-TW':'來源可信度比造型重要','en':'Sourcing matters more than styling'},
+   rec:['research','storytelling','data-visualization'], sug:['brand-system','text-check'],
+   style:'editorial', qa:'strict'},
+  {id:'comic', ico:'💬', label:{'zh-TW':'漫畫筆記','en':'Comic Notes'},
+   sum:{'zh-TW':'遮住文字也看得懂','en':'Readable with the text covered'},
+   rec:['storytelling','infographic','image-generation'], sug:['instructional-design','vision-judge'],
+   style:'bauhaus', qa:'standard'},
+  {id:'brand-kit', ico:'🎨', label:{'zh-TW':'品牌系統','en':'Brand System'},
+   sum:{'zh-TW':'供其他專案匯入的 token 與元件','en':'Tokens and components others import'},
+   rec:['brand-system','infographic'], sug:['image-generation','brand-check'],
+   style:'swiss-editorial', qa:'strict'},
+  {id:'social', ico:'📱', label:{'zh-TW':'社群貼文','en':'Social Post'},
+   sum:{'zh-TW':'依平台尺寸的視覺加文案','en':'Platform-shaped visuals plus copy'},
+   rec:['storytelling','brand-system','image-generation'], sug:['infographic','text-check'],
+   style:'glassmorphism', qa:'light'}
+];
+
+var STYLES = [
+  {id:'swiss-editorial', label:{'zh-TW':'瑞士風格','en':'Swiss Editorial'},
+   sum:{'zh-TW':'嚴格網格、大量留白、單一強調色','en':'Grid discipline, whitespace, one accent'},
+   t:{bg:'#FFFFFF',fg:'#111111',ac:'#E4002B',mu:'#8A8A8A',r:'0px'}},
+  {id:'tech-future', label:{'zh-TW':'科技未來','en':'Tech Future'},
+   sum:{'zh-TW':'深藏青底、霓虹漸層、高對比','en':'Deep navy, neon gradients, high contrast'},
+   t:{bg:'#0B1020',fg:'#F2F5FF',ac:'#4DA3FF',mu:'#7E8AAE',r:'16px'}},
+  {id:'glassmorphism', label:{'zh-TW':'玻璃擬態','en':'Glassmorphism'},
+   sum:{'zh-TW':'半透明堆疊、柔和模糊、有層次','en':'Translucent layers, soft blur, depth'},
+   t:{bg:'#12203A',fg:'#FFFFFF',ac:'#38BDF8',mu:'#9FB3C8',r:'20px'}},
+  {id:'editorial', label:{'zh-TW':'編輯設計','en':'Editorial'},
+   sum:{'zh-TW':'雜誌節奏、襯線標題、控制欄寬','en':'Magazine rhythm, serif heads, measured columns'},
+   t:{bg:'#FBF9F4',fg:'#1A1A1A',ac:'#7A2E2E',mu:'#6F6A61',r:'2px'}},
+  {id:'bauhaus', label:{'zh-TW':'包浩斯','en':'Bauhaus'},
+   sum:{'zh-TW':'三原色、幾何原形、功能優先','en':'Primaries, geometry, function first'},
+   t:{bg:'#F4F1EA',fg:'#141414',ac:'#D8232A',mu:'#7C7768',r:'0px'}},
+  {id:'minimal', label:{'zh-TW':'極簡設計','en':'Minimal'},
+   sum:{'zh-TW':'刪到不能再刪，單一強調色','en':'Remove until it breaks, one accent'},
+   t:{bg:'#FAFAFA',fg:'#171717',ac:'#2563EB',mu:'#A3A3A3',r:'8px'}}
+];
+
+var BRANDS = [
+  {id:'none',   ico:'○',  label:{'zh-TW':'不套用品牌','en':'No brand'},
+   sum:{'zh-TW':'直接使用風格包 token','en':'Use style pack tokens directly'}},
+  {id:'local',  ico:'📁', label:{'zh-TW':'我的品牌','en':'My brand'},
+   sum:{'zh-TW':'讀本機 brand/tokens.json','en':'Reads local brand/tokens.json'}},
+  {id:'figma',  ico:'🎯', label:{'zh-TW':'Figma 設計系統','en':'Figma design system'},
+   sum:{'zh-TW':'以 file key 參照，金鑰走環境變數','en':'Referenced by file key; token via env'}},
+  {id:'github', ico:'🐙', label:{'zh-TW':'GitHub 品牌倉庫','en':'GitHub brand repository'},
+   sum:{'zh-TW':'從 repo 拉 token 與元件','en':'Pulls tokens and components from a repo'}},
+  {id:'upload', ico:'⬆', label:{'zh-TW':'上傳 Brand Kit','en':'Upload brand kit'},
+   sum:{'zh-TW':'執行階段解析上傳的素材包','en':'Resolved from an uploaded kit at run time'}}
+];
+
+var QAS = [
+  {id:'light',    ico:'○',  label:{'zh-TW':'輕量檢查','en':'Light'},
+   sum:{'zh-TW':'只跑文字檢查，門檻 60','en':'Text check only, threshold 60'},
+   checks:['text-check'], th:60, rounds:0},
+  {id:'standard', ico:'◐',  label:{'zh-TW':'標準檢查','en':'Standard'},
+   sum:{'zh-TW':'視覺＋文字＋品牌，門檻 80','en':'Vision + text + brand, threshold 80'},
+   checks:['vision-judge','text-check','brand-check'], th:80, rounds:2},
+  {id:'strict',   ico:'●',  label:{'zh-TW':'嚴格檢查','en':'Strict'},
+   sum:{'zh-TW':'全檢查＋自動修正，門檻 92','en':'All checks plus auto repair, threshold 92'},
+   checks:['vision-judge','text-check','brand-check','auto-repair'], th:92, rounds:4}
+];
+
+var S = { project:null, skills:[], style:null, brand:null, qa:null, touchedSkills:false };
+
+function t(k){ return I18N[LANG][k]; }
+function L(o){ return o.label[LANG] || o.label.en; }
+function Sm(o){ return o.sum[LANG] || o.sum.en; }
+function byId(list, id){ return list.filter(function(x){ return x.id === id; })[0]; }
+function has(arr, v){ return arr.indexOf(v) >= 0; }
+
+function setLang(l){
+  LANG = l;
+  document.documentElement.lang = l;
+  document.getElementById('btn-zh').className = (l === 'zh-TW') ? 'on' : '';
+  document.getElementById('btn-en').className = (l === 'en') ? 'on' : '';
+  render();
+}
+function setFmt(f){
+  FMT = f;
+  document.getElementById('tab-yaml').className = (f === 'yaml') ? 'on' : '';
+  document.getElementById('tab-json').className = (f === 'json') ? 'on' : '';
+  build();
+}
+
+function pickProject(id){
+  var p = byId(PROJECTS, id);
+  S.project = id;
+  if(!S.touchedSkills){ S.skills = p.rec.slice(); }
+  if(!S.style){ S.style = p.style; }
+  if(!S.qa){ S.qa = p.qa; }
+  if(!S.brand){ S.brand = 'none'; }
+  render();
+}
+function toggleSkill(id){
+  S.touchedSkills = true;
+  if(has(S.skills, id)){
+    S.skills = S.skills.filter(function(x){ return x !== id; });
+  } else {
+    S.skills.push(id);
+  }
+  render();
+}
+function pick(key, id){ S[key] = id; render(); }
+
+function esc(s){
+  return String(s).replace(/[&<>"]/g, function(c){
+    return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c];
+  });
+}
+function arg(s){ return "'" + s + "'"; }
+
+function render(){
+  var els = document.querySelectorAll('[data-i]');
+  for(var i = 0; i < els.length; i++){ els[i].textContent = t(els[i].getAttribute('data-i')); }
+
+  var stepState = [!!S.project, S.skills.length > 0, !!S.style, !!S.brand, !!S.qa, false];
+  document.getElementById('steps').innerHTML = t('steps').map(function(s, i){
+    var cls = stepState[i] ? 'done' : ((i === 0 || stepState[i - 1]) ? 'on' : '');
+    return '<div class="' + cls + '">' + (i + 1) + '. ' + esc(s) + '</div>';
+  }).join('');
+
+  document.getElementById('projects').innerHTML = PROJECTS.map(function(p){
+    return '<button class="card' + (S.project === p.id ? ' sel' : '') +
+      '" onclick="pickProject(' + arg(p.id) + ')">' +
+      '<div class="ico">' + p.ico + '</div><div class="t">' + esc(L(p)) + '</div>' +
+      '<div class="s">' + esc(Sm(p)) + '</div></button>';
+  }).join('');
+
+  var show = !!S.project;
+  ['sec-skills','sec-style','sec-brand','sec-qa','sec-result'].forEach(function(id){
+    document.getElementById(id).hidden = !show;
+  });
+  if(!show){ return; }
+
+  var proj = byId(PROJECTS, S.project);
+
+  document.getElementById('skills').innerHTML = CATS.map(function(c){
+    var list = SKILLS.filter(function(s){ return s.cat === c.id; });
+    if(!list.length){ return ''; }
+    return '<div class="catrow"><h3>' + esc(c.label[LANG]) + '</h3><div class="tokens">' +
+      list.map(function(s){
+        var on = has(S.skills, s.id);
+        var isSug = has(proj.sug, s.id) && !on;
+        var why = '';
+        if(on && has(proj.rec, s.id)){ why = '<span class="why">' + esc(t('recommended')) + '</span>'; }
+        else if(isSug){ why = '<span class="why">＋' + esc(t('suggested')) + '</span>'; }
+        return '<button class="tok' + (on ? ' on' : '') + (isSug ? ' sugg' : '') +
+          '" onclick="toggleSkill(' + arg(s.id) + ')">' + (on ? '✓ ' : '') + esc(L(s)) + why + '</button>';
+      }).join('') + '</div></div>';
+  }).join('');
+
+  document.getElementById('styles').innerHTML = STYLES.map(function(st){
+    var pv = '<div class="preview" style="background:' + st.t.bg + ';border-radius:' + st.t.r + '">' +
+      '<div class="bar" style="background:' + st.t.ac + ';width:40%"></div>' +
+      '<div class="head" style="color:' + st.t.fg + '">Aa 視覺</div>' +
+      '<div class="bar" style="background:' + st.t.mu + ';width:80%;height:5px;opacity:.6"></div>' +
+      '<div class="bar" style="background:' + st.t.mu + ';width:60%;height:5px;opacity:.4"></div></div>';
+    return '<button class="card' + (S.style === st.id ? ' sel' : '') +
+      '" onclick="pick(' + arg('style') + ',' + arg(st.id) + ')">' + pv +
+      '<div class="t">' + esc(L(st)) + '</div><div class="s">' + esc(Sm(st)) + '</div></button>';
+  }).join('');
+
+  document.getElementById('brands').innerHTML = BRANDS.map(function(b){
+    return '<button class="card' + (S.brand === b.id ? ' sel' : '') +
+      '" onclick="pick(' + arg('brand') + ',' + arg(b.id) + ')">' +
+      '<div class="ico">' + b.ico + '</div><div class="t">' + esc(L(b)) + '</div>' +
+      '<div class="s">' + esc(Sm(b)) + '</div></button>';
+  }).join('');
+
+  document.getElementById('qas').innerHTML = QAS.map(function(q){
+    return '<button class="card' + (S.qa === q.id ? ' sel' : '') +
+      '" onclick="pick(' + arg('qa') + ',' + arg(q.id) + ')">' +
+      '<div class="ico">' + q.ico + '</div><div class="t">' + esc(L(q)) + '</div>' +
+      '<div class="s">' + esc(Sm(q)) + '</div></button>';
+  }).join('');
+
+  var q = byId(QAS, S.qa) || QAS[1];
+  var st = byId(STYLES, S.style);
+  var br = byId(BRANDS, S.brand);
+  var title = document.getElementById('ptitle').value.replace(/^\s+|\s+$/g, '');
+
+  function chips(ids, cls){
+    return ids.map(function(id){
+      var s = byId(SKILLS, id);
+      return '<span class="chip' + (cls ? ' ' + cls : '') + '">' + esc(s ? L(s) : id) + '</span>';
+    }).join('');
+  }
+
+  var rows = [
+    ['kproject', proj.ico + ' ' + esc(L(proj)) + (title ? ' — ' + esc(title) : '')],
+    ['kskills', chips(S.skills, '') || '—'],
+    ['kvisual', st ? '<span class="chip">' + esc(L(st)) + '</span>' : '—'],
+    ['kbrand',  br ? '<span class="chip">' + esc(L(br)) + '</span>' : '—'],
+    ['kqa', chips(q.checks, 'q') + '<span class="chip q">' + q.th + ' / 100</span>']
+  ];
+  document.getElementById('summary').innerHTML = rows.map(function(r){
+    return '<div class="row"><div class="k">' + esc(t(r[0])) + '</div><div>' + r[1] + '</div></div>';
+  }).join('');
+}
+
+function manifest(){
+  var q = byId(QAS, S.qa) || QAS[1];
+  var title = document.getElementById('ptitle').value.replace(/^\s+|\s+$/g, '');
+  var m = {
+    vsc_version: '0.1.0',
+    project: { type: S.project, language: LANG },
+    skills: S.skills.slice(),
+    visual: { style: S.style },
+    brand: { source: S.brand },
+    quality: {
+      pack: q.id,
+      vision_judge: has(q.checks, 'vision-judge'),
+      text_check:   has(q.checks, 'text-check'),
+      brand_check:  has(q.checks, 'brand-check'),
+      auto_repair:  has(q.checks, 'auto-repair'),
+      threshold: q.th,
+      max_repair_rounds: q.rounds
+    },
+    runtime: { target: 'vad', created: new Date().toISOString().slice(0, 10) }
+  };
+  if(title){ m.project.title = title; }
+  return m;
+}
+
+function toYaml(o, ind){
+  ind = ind || 0;
+  var pad = new Array(ind + 1).join('  ');
+  var lines = [];
+  Object.keys(o).forEach(function(k){
+    var v = o[k];
+    if(Object.prototype.toString.call(v) === '[object Array]'){
+      lines.push(pad + k + ':');
+      v.forEach(function(x){ lines.push(pad + '  - ' + x); });
+    } else if(v && typeof v === 'object'){
+      lines.push(pad + k + ':');
+      lines.push(toYaml(v, ind + 1));
+    } else if(typeof v === 'string' && /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(v)){
+      // quote dates so YAML loaders keep them as strings, matching the schema
+      lines.push(pad + k + ': "' + v + '"');
+    } else {
+      lines.push(pad + k + ': ' + v);
+    }
+  });
+  return lines.join(NL);
+}
+
+function build(){
+  var m = manifest();
+  document.getElementById('outwrap').hidden = false;
+  document.getElementById('out').textContent =
+    (FMT === 'yaml') ? toYaml(m) : JSON.stringify(m, null, 2);
+}
+function copyOut(){
+  build();
+  navigator.clipboard.writeText(document.getElementById('out').textContent).then(function(){
+    alert(t('copied'));
+  });
+}
+function downloadManifest(){
+  build();
+  var ext = (FMT === 'yaml') ? 'yaml' : 'json';
+  var name = (S.project || 'project') + '.vsc.' + ext;
+  var blob = new Blob([document.getElementById('out').textContent], { type: 'text/plain;charset=utf-8' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+id: swiss-editorial
+label: { en: "Swiss Editorial", zh-TW: "瑞士風格" }
+principles:
+  en: Grid discipline, generous whitespace, one accent, type does the work.
+  zh-TW: 嚴格網格、大量留白、單一強調色，靠字體排版說話。
+tokens:
+  bg: "#FFFFFF"
+  fg: "#111111"
+  accent: "#E4002B"
+  muted: "#8A8A8A"
+  radius: "0px"
+  font_display: "Helvetica Neue, Inter, Noto Sans TC, sans-serif"
+avoid: [gradients, drop-shadows, decorative-icons]

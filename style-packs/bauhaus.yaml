@@ -1,0 +1,15 @@
+id: bauhaus
+label: { en: "Bauhaus", zh-TW: "包浩斯" }
+principles:
+  en: Primary colours, geometric primitives, function-first composition.
+  zh-TW: 三原色、幾何原形、功能優先的構成。
+tokens:
+  bg: "#F4F1EA"
+  fg: "#141414"
+  accent: "#D8232A"
+  accent2: "#1E4FD8"
+  accent3: "#F2C200"
+  muted: "#7C7768"
+  radius: "0px"
+  font_display: "Futura, Inter, Noto Sans TC, sans-serif"
+avoid: [gradients, photographic-backgrounds]

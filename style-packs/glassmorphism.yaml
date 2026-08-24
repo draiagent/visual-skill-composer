@@ -1,0 +1,15 @@
+id: glassmorphism
+label: { en: "Glassmorphism", zh-TW: "玻璃擬態" }
+principles:
+  en: Translucent layered cards, soft blur, light borders, depth without clutter.
+  zh-TW: 半透明堆疊卡片、柔和模糊、細緻邊框，有層次但不雜亂。
+tokens:
+  bg: "#12203A"
+  fg: "#FFFFFF"
+  accent: "#38BDF8"
+  accent2: "#FB923C"
+  muted: "#9FB3C8"
+  radius: "20px"
+  blur: "18px"
+  font_display: "Inter, Noto Sans TC, sans-serif"
+avoid: [flat-fills-only, hard-black-shadows]

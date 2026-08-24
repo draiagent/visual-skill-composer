@@ -1,0 +1,8 @@
+id: github
+label: { en: "GitHub Brand Repository", zh-TW: "GitHub 品牌倉庫" }
+source: github
+config:
+  repo: "draiagent/Enterprise-Brand-Style-AI-Design-System"
+  ref: main
+  path: tokens/
+resolves: [colors, fonts, tokens, components, templates]

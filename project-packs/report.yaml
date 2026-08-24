@@ -1,0 +1,17 @@
+id: report
+label:
+  en: Report
+  zh-TW: 報告
+icon: "📑"
+summary:
+  en: A long-form document where sourcing matters more than styling.
+  zh-TW: 長篇文件，來源可信度比造型重要。
+recommended_skills:
+  - research
+  - storytelling
+  - data-visualization
+suggested_skills:
+  - brand-system
+  - text-check
+default_style: editorial
+default_qa: strict

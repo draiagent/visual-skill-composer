@@ -1,0 +1,17 @@
+id: dashboard
+label:
+  en: Dashboard
+  zh-TW: 儀表板
+icon: "📈"
+summary:
+  en: A dense data surface where every pixel must earn its place.
+  zh-TW: 高資訊密度的資料介面，每個像素都要有理由。
+recommended_skills:
+  - data-visualization
+  - brand-system
+suggested_skills:
+  - research
+  - text-check
+  - vision-judge
+default_style: minimal
+default_qa: strict

@@ -1,0 +1,15 @@
+# secrets — brand sources are referenced, never stored
+.env
+*.token
+brand/tokens.json
+brand/
+
+# python
+__pycache__/
+*.pyc
+.venv/
+
+# os
+.DS_Store
+Thumbs.db
+desktop.ini

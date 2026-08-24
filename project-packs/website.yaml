@@ -1,0 +1,18 @@
+id: website
+label:
+  en: Website / Landing Page
+  zh-TW: 網站／登陸頁
+icon: "🌐"
+summary:
+  en: A single-purpose page that explains an offer and converts.
+  zh-TW: 單一目的的頁面，說清楚主張並促成轉換。
+recommended_skills:
+  - storytelling
+  - brand-system
+  - infographic
+suggested_skills:
+  - motion
+  - image-generation
+  - vision-judge
+default_style: minimal
+default_qa: standard

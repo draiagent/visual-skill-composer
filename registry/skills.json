@@ -1,0 +1,158 @@
+{
+  "$schema": "../schemas/registry.schema.json",
+  "version": "0.1.0",
+  "updated": "2026-08-24",
+  "note": "Skill IDs are ALWAYS English kebab-case. UI labels are bilingual. Never localise an id.",
+  "categories": [
+    { "id": "narrative",  "label": { "en": "Narrative",       "zh-TW": "敘事" } },
+    { "id": "visual",     "label": { "en": "Visual",          "zh-TW": "視覺" } },
+    { "id": "knowledge",  "label": { "en": "Knowledge",       "zh-TW": "知識" } },
+    { "id": "production", "label": { "en": "Production",      "zh-TW": "產製" } },
+    { "id": "quality",    "label": { "en": "Quality Control", "zh-TW": "品質控制" } }
+  ],
+  "skills": [
+    {
+      "id": "storytelling",
+      "category": "narrative",
+      "label": { "en": "Storytelling", "zh-TW": "故事敘事" },
+      "summary": {
+        "en": "Structures content into an arc so the audience follows a line, not a list.",
+        "zh-TW": "把內容組織成起承轉合，讓觀眾跟著一條線走，而不是看一堆條列。"
+      },
+      "outputs": ["outline", "narrative-arc"],
+      "requires": []
+    },
+    {
+      "id": "instructional-design",
+      "category": "knowledge",
+      "label": { "en": "Instructional Design", "zh-TW": "教學設計" },
+      "summary": {
+        "en": "Defines learning objectives, cognitive load, and assessment points.",
+        "zh-TW": "定義學習目標、認知負荷與評量點。"
+      },
+      "outputs": ["learning-objectives", "lesson-plan"],
+      "requires": []
+    },
+    {
+      "id": "presentation-design",
+      "category": "production",
+      "label": { "en": "Presentation Design", "zh-TW": "簡報設計" },
+      "summary": {
+        "en": "Turns an outline into slide-level layout decisions and hierarchy.",
+        "zh-TW": "把大綱轉成投影片層級的版面與資訊階層決策。"
+      },
+      "outputs": ["slide-plan"],
+      "requires": ["storytelling"]
+    },
+    {
+      "id": "infographic",
+      "category": "visual",
+      "label": { "en": "Infographic", "zh-TW": "資訊圖解" },
+      "summary": {
+        "en": "Converts abstract relationships into diagrams a reader can decode without text.",
+        "zh-TW": "把抽象關係轉成「遮住文字也看得懂」的圖解。"
+      },
+      "outputs": ["diagram-spec"],
+      "requires": []
+    },
+    {
+      "id": "data-visualization",
+      "category": "visual",
+      "label": { "en": "Data Visualization", "zh-TW": "資料視覺化" },
+      "summary": {
+        "en": "Chooses chart form, encoding, and palette for a dataset and a claim.",
+        "zh-TW": "為資料與論點挑選圖表形式、編碼方式與配色。"
+      },
+      "outputs": ["chart-spec"],
+      "requires": []
+    },
+    {
+      "id": "research",
+      "category": "knowledge",
+      "label": { "en": "Research", "zh-TW": "研究分析" },
+      "summary": {
+        "en": "Gathers and cites primary sources; flags unverified claims.",
+        "zh-TW": "蒐集並標註一手來源，標示未經查證的主張。"
+      },
+      "outputs": ["source-list", "fact-table"],
+      "requires": []
+    },
+    {
+      "id": "brand-system",
+      "category": "visual",
+      "label": { "en": "Brand System", "zh-TW": "品牌系統" },
+      "summary": {
+        "en": "Applies tokens, components, and asset rules from a brand pack.",
+        "zh-TW": "套用品牌包裡的設計 token、元件與素材規則。"
+      },
+      "outputs": ["token-set"],
+      "requires": []
+    },
+    {
+      "id": "image-generation",
+      "category": "production",
+      "label": { "en": "AI Image Generation", "zh-TW": "AI 圖像生成" },
+      "summary": {
+        "en": "Produces illustrations, mascots, and covers under the active style pack.",
+        "zh-TW": "在啟用的風格包規範下生成插圖、吉祥物與封面。"
+      },
+      "outputs": ["image-assets"],
+      "requires": []
+    },
+    {
+      "id": "motion",
+      "category": "production",
+      "label": { "en": "Motion & Animation", "zh-TW": "動畫效果" },
+      "summary": {
+        "en": "Adds timing, transitions, and easing to a static composition.",
+        "zh-TW": "為靜態版面加上時間軸、轉場與緩動。"
+      },
+      "outputs": ["motion-spec"],
+      "requires": []
+    },
+    {
+      "id": "vision-judge",
+      "category": "quality",
+      "label": { "en": "Vision Judge", "zh-TW": "視覺品質評估" },
+      "summary": {
+        "en": "Renders the output, looks at it, and scores it against the style contract.",
+        "zh-TW": "把成品渲染出來、實際看過，再依風格契約評分。"
+      },
+      "outputs": ["vision-report"],
+      "requires": []
+    },
+    {
+      "id": "text-check",
+      "category": "quality",
+      "label": { "en": "Text Check", "zh-TW": "文字檢查" },
+      "summary": {
+        "en": "Checks overflow, orphan lines, CJK line-breaking, and typos.",
+        "zh-TW": "檢查文字溢出、孤行、中文斷行與錯字。"
+      },
+      "outputs": ["text-report"],
+      "requires": []
+    },
+    {
+      "id": "brand-check",
+      "category": "quality",
+      "label": { "en": "Brand Check", "zh-TW": "品牌檢查" },
+      "summary": {
+        "en": "Verifies colour, type, spacing, and logo usage against the brand pack.",
+        "zh-TW": "比對品牌包驗證色彩、字體、間距與 logo 用法。"
+      },
+      "outputs": ["brand-report"],
+      "requires": ["brand-system"]
+    },
+    {
+      "id": "auto-repair",
+      "category": "quality",
+      "label": { "en": "Auto Repair", "zh-TW": "自動修正" },
+      "summary": {
+        "en": "Consumes QA reports and re-renders until the score clears the threshold.",
+        "zh-TW": "讀取品質報告並重新產製，直到分數通過門檻。"
+      },
+      "outputs": ["repaired-output"],
+      "requires": ["vision-judge"]
+    }
+  ]
+}
