@@ -71,6 +71,9 @@ VSC 把打勾清單換成五個「用看的就能做」的決策：
 > **VSC 決定「要帶哪些工具出門」；VAD 決定「這些工具怎麼完成工作」。**
 
 VSC 本身不執行任何東西，它只負責組裝、驗證、交棒。
+VAD 端用 `python tools/vac_runner.py vsc <manifest>` 把 manifest 讀進去，
+編譯成標準 VAC 卡再執行，接口規格見
+[VSC-INTERFACE.md](https://github.com/draiagent/Visual-Agent-Design/blob/main/docs/VSC-INTERFACE.md)。
 
 ---
 

@@ -65,7 +65,10 @@ These are deliberately **two projects, not one**.
 
 **VSC decides which tools you take with you. VAD decides how those tools get the job done.**
 
-VSC never executes anything. It composes, validates, and hands off.
+VSC never executes anything. It composes, validates, and hands off. VAD reads the
+manifest through `python tools/vac_runner.py vsc <manifest>` and compiles it onto a
+Standard VAC card — see
+[VSC-INTERFACE.md](https://github.com/draiagent/Visual-Agent-Design/blob/main/docs/VSC-INTERFACE.md).
 
 ---
 

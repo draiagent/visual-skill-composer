@@ -38,7 +38,23 @@ silently ignored hint.
 
 ## Executor contract
 
-An executor that claims VSC support must:
+VAD implements this contract. A manifest is compiled onto a Standard VAC Five-Pack card
+and executed from there:
+
+```bash
+git clone https://github.com/draiagent/Visual-Agent-Design.git
+cd Visual-Agent-Design
+python tools/vac_runner.py vsc <manifest> --packs ../visual-skill-composer
+```
+
+`--packs` points the adapter at this repo so it can resolve the style pack's `avoid`
+list. Without it the card still compiles, but carries an explicit unresolved-style
+constraint. Only the five project types with a Standard VAC compile today
+(`academic-presentation`, `website`, `video`, `dashboard`, `report`); the rest are
+refused rather than guessed. See
+[VSC-INTERFACE.md](https://github.com/draiagent/Visual-Agent-Design/blob/main/docs/VSC-INTERFACE.md).
+
+Any executor that claims VSC support must:
 
 1. Reject any manifest that fails schema validation.
 2. Honour the style pack's `avoid` list, not just its tokens.

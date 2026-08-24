@@ -38,6 +38,20 @@ python tools/validate.py path/to/manifest.yaml
 
 ## 執行端契約
 
+VAD 已經實作這份契約。manifest 會被編譯到 Standard VAC Five-Pack 的標準卡上再執行：
+
+```bash
+git clone https://github.com/draiagent/Visual-Agent-Design.git
+cd Visual-Agent-Design
+python tools/vac_runner.py vsc <manifest> --packs ../visual-skill-composer
+```
+
+`--packs` 是讓接口指回本 repo，才能解析風格包的 `avoid` 清單。
+不給也能編譯出合法的卡，但卡上會明確帶一條「風格包未解析」的約束。
+目前只有五種有標準卡的專案類型能編譯（`academic-presentation`、`website`、`video`、
+`dashboard`、`report`），其餘會被拒絕而不是硬猜一張最接近的卡。接口規格見
+[VSC-INTERFACE.md](https://github.com/draiagent/Visual-Agent-Design/blob/main/docs/VSC-INTERFACE.md)。
+
 宣稱支援 VSC 的執行端必須做到：
 
 1. 驗證失敗的 manifest 一律拒絕執行。
