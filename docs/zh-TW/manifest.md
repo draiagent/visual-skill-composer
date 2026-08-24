@@ -48,8 +48,8 @@ python tools/vac_runner.py vsc <manifest> --packs ../visual-skill-composer
 
 `--packs` 是讓接口指回本 repo，才能解析風格包的 `avoid` 清單。
 不給也能編譯出合法的卡，但卡上會明確帶一條「風格包未解析」的約束。
-目前有七種專案類型能編譯：`academic-presentation`、`website`、`video`、`dashboard`、
-`report`、`infographic-card`、`comic`。`brand-kit` 與 `social` 尚無標準卡，
+目前有八種專案類型能編譯：`academic-presentation`、`website`、`video`、`dashboard`、
+`report`、`infographic-card`、`comic`、`social`。只剩 `brand-kit` 尚無標準卡，
 會被拒絕而不是硬猜一張最接近的。接口規格見
 [VSC-INTERFACE.md](https://github.com/draiagent/Visual-Agent-Design/blob/main/docs/VSC-INTERFACE.md)。
 
