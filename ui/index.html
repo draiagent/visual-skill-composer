@@ -84,6 +84,8 @@
         padding:6px 14px;cursor:pointer;font-family:inherit;font-size:14px}
   .tabs button.on{border-color:var(--accent);color:var(--accent)}
   footer{margin-top:56px;color:var(--muted);font-size:14px;border-top:1px solid var(--line);padding-top:20px}
+  footer a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+  footer a:hover{color:var(--fg,#F2F5FF)}
   @media(max-width:600px){ body{font-size:17px} .summary .row{grid-template-columns:1fr} }
 </style>
 </head>
@@ -154,7 +156,7 @@
   </div>
 </section>
 
-<footer><span data-i="foot"></span></footer>
+<footer><span data-i="foot"></span> — <a href="https://github.com/draiagent/Visual-Agent-Design#核心原則high-intelligence-for-discovery-low-cost-for-execution" target="_blank" rel="noopener" data-i="footLink"></a></footer>
 </div>
 
 <script>
@@ -175,7 +177,8 @@ var I18N = {
     steps: ['專案','技能','視覺','品牌','品控','結果'],
     kproject:'專案', kskills:'技能', kvisual:'視覺', kbrand:'品牌', kqa:'品質控制',
     recommended:'推薦', suggested:'建議加入', copied:'已複製',
-    foot: 'Visual Skill Composer (VSC) 決定「要帶哪些工具出門」；Visual Agent Design (VAD) 決定「這些工具怎麼完成工作」。'
+    foot: 'Visual Skill Composer (VSC) 決定「要帶哪些工具出門」；Visual Agent Design (VAD) 決定「這些工具怎麼完成工作」。',
+    footLink: 'VAD 核心原則：High Intelligence for Discovery, Low Cost for Execution'
   },
   'en': {
     tagline: 'Pick, compose, and see the AI skill set a project actually needs.',
@@ -190,7 +193,8 @@ var I18N = {
     steps: ['Project','Skills','Visual','Brand','QA','Result'],
     kproject:'Project', kskills:'Skills', kvisual:'Visual', kbrand:'Brand', kqa:'Quality',
     recommended:'recommended', suggested:'suggested', copied:'Copied',
-    foot: 'VSC decides which tools you take with you. VAD decides how those tools get the job done.'
+    foot: 'VSC decides which tools you take with you. VAD decides how those tools get the job done.',
+    footLink: 'VAD core principle: High Intelligence for Discovery, Low Cost for Execution'
   }
 };
 
