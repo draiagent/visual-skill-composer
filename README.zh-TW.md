@@ -87,6 +87,14 @@ VAD 端用 `python tools/vac_runner.py vsc <manifest>` 把 manifest 讀進去，
 編譯成標準 VAC 卡再執行，接口規格見
 [VSC-INTERFACE.md](https://github.com/draiagent/Visual-Agent-Design/blob/main/docs/VSC-INTERFACE.md)。
 
+這條交接背後對應到 VAD 的核心原則
+[**High Intelligence for Discovery, Low Cost for Execution**](https://github.com/draiagent/Visual-Agent-Design#核心原則high-intelligence-for-discovery-low-cost-for-execution)：
+
+> 第一次用高階 AI「學會」，之後讓低成本 Agent「重複做好」。
+
+VSC 組裝出的 Project Skill Pack，正是「學會」之後被固化下來、可重複交給低成本 Agent 執行的規格——
+探索階段的成本落在組裝與驗證，執行階段才輪到 VAD 用最省成本的方式規模化跑起來。
+
 ---
 
 ## 快速開始

@@ -84,6 +84,15 @@ manifest through `python tools/vac_runner.py vsc <manifest>` and compiles it ont
 Standard VAC card — see
 [VSC-INTERFACE.md](https://github.com/draiagent/Visual-Agent-Design/blob/main/docs/VSC-INTERFACE.md).
 
+This handoff maps onto VAD's core principle,
+[**High Intelligence for Discovery, Low Cost for Execution**](https://github.com/draiagent/Visual-Agent-Design#核心原則high-intelligence-for-discovery-low-cost-for-execution):
+
+> Use a high-end model once to *learn* the task; let a low-cost agent *repeat* it well afterward.
+
+The Project Skill Pack that VSC assembles is exactly that learned, reusable spec —
+the cost of discovery is paid once during composition and validation, and VAD then
+executes it at scale with the cheapest model that still gets the job done.
+
 ---
 
 ## Quick start
